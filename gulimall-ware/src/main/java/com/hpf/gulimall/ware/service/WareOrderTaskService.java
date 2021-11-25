@@ -1,0 +1,20 @@
+package com.hpf.gulimall.ware.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.hpf.common.utils.PageUtils;
+import com.hpf.gulimall.ware.entity.WareOrderTaskEntity;
+
+import java.util.Map;
+
+/**
+ * 库存工作单
+ *
+ * @author huangpengfei
+ * @email 641655770@qq.com
+ * @date 2021-11-25 09:56:32
+ */
+public interface WareOrderTaskService extends IService<WareOrderTaskEntity> {
+
+    PageUtils queryPage(Map<String, Object> params);
+}
+

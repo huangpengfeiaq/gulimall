@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: gulimall-coupon # 服务名称
+  profiles:
+    active: dev #开发环境，这里是dev
+  cloud:
+    nacos:
+      server-addr: localhost:8848 # Nacos地址
+#      discovery:
+#        cluster-name: HZ # 集群名称，HZ指杭州
+#        namespace: e3d134fc-c8e2-4998-a8c1-604368775218 # 命名空间，填ID
+#        ephemeral: false # 是否是临时实例
+      config:
+        file-extension: yaml # 文件后缀名
