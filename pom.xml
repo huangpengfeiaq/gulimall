@@ -20,6 +20,7 @@
         <module>renren-generator</module>
         <module>gulimall-common</module>
         <module>gulimall-feign</module>
+        <module>gulimall-gateway</module>
     </modules>
 
     <parent>
@@ -40,6 +41,19 @@
         <mybatis.version>2.1.1</mybatis.version>
         <mybatis-plus.version>3.4.3.4</mybatis-plus.version>
     </properties>
+
+    <!--声明依赖，所有模块生效-->
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <!-- nacos客户端依赖包 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+    </dependencies>
 
     <!--dependencyManagement 标签用于控制子模块的依赖版本等信息 -->
     <!-- 该标签只用来控制版本，不能将依赖引入 -->
@@ -81,17 +95,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <!--声明依赖，所有模块生效-->
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <!-- nacos客户端依赖包 -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
-    </dependencies>
 </project>
