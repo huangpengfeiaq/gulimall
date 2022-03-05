@@ -5,27 +5,18 @@ spring:
     gateway:
       routes: # 网关路由配置
         # 前端项目，/api前缀
-        - id: admin_route
-          uri: lb://renren-fast
-          predicates:
+        - id: admin_route # 路由id，自定义，只要唯一即可
+          uri: lb://renren-fast # 路由的目标地址 (lb就是负载均衡，后面跟服务名称 / http就是固定地址)
+          predicates: # 路由断言，也就是判断请求是否符合路由规则的条件
             - Path=/api/** # 这个是按照路径匹配，只要以/api/开头就符合要求
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
-#        - id: user-service # 路由id，自定义，只要唯一即可
-#          # uri: http://127.0.0.1:8081 # 路由的目标地址 http就是固定地址
-#          uri: lb://userservice # 路由的目标地址 lb就是负载均衡，后面跟服务名称
-#          predicates: # 路由断言，也就是判断请求是否符合路由规则的条件
-#            - Path=/user/** # 这个是按照路径匹配，只要以/user/开头就符合要求
-#          filters:
-#            - AddRequestHeader=Truth, Itcast is freaking awesome! # 添加请求头
-#        - id: order-service
-#          uri: lb://orderservice
-#          predicates:
-#            - Path=/order/**
-#        - id: sample-service
-#          uri: lb://sampleservice
-#          predicates:
-#            - Path=/sample/**
+        - id: product_route
+          uri: lb://gulimall-product
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
 #      default-filters: # 默认过滤器，会对所有的路由请求都生效
 #        - AddRequestHeader=Truth, Itcast is freaking awesome! # 添加请求头
       globalcors: # 全局的跨域处理
