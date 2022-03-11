@@ -4,6 +4,14 @@ spring:
   cloud:
     gateway:
       routes: # 网关路由配置
+        # 第三方服务
+        - id: third_party_route
+          uri: lb://gulimall-third-party
+          predicates:
+            - Path=/api/thirdparty/**
+          filters:
+            - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
+        # 商品服务
         - id: product_route
           uri: lb://gulimall-product
           predicates:
