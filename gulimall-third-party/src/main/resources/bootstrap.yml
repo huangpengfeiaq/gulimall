@@ -10,7 +10,7 @@ spring:
       access-key: LTAI5t5s5szrRwLSGULKaiv2
       secret-key: 69xegJUVswuoj3NCxJfEQWuFyjCeDe
       oss:
-        endpoint: https://oss-cn-beijing.aliyuncs.com
+        endpoint: oss-cn-beijing.aliyuncs.com
         bucket: gulimall-hpf
     nacos:
       server-addr: localhost:8848 # Nacos地址
