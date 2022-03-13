@@ -1,11 +1,11 @@
 package com.hpf.gulimall.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.hpf.gulimall.product.dao.CategoryBrandRelationDao;
+import com.hpf.gulimall.product.entity.CategoryBrandRelationEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -17,10 +17,15 @@ import com.hpf.common.utils.Query;
 import com.hpf.gulimall.product.dao.CategoryDao;
 import com.hpf.gulimall.product.entity.CategoryEntity;
 import com.hpf.gulimall.product.service.CategoryService;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+    @Resource
+    private CategoryBrandRelationDao categoryBrandRelationDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -54,6 +59,41 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
         //逻辑删除
         baseMapper.deleteBatchIds(asList);
+    }
+
+    //[2,34,225]
+    @Override
+    public Long[] findCatelogPath(Long catelogId) {
+        List<Long> paths = findParentPath(catelogId, new ArrayList<>());
+        Collections.reverse(paths);
+
+        return paths.toArray(new Long[0]);
+    }
+
+    /**
+     * 级联更新所有关联的数据
+     *
+     * @param category
+     */
+    @Transactional
+    @Override
+    public void updateCascade(CategoryEntity category) {
+        this.updateById(category);
+        categoryBrandRelationDao.update(
+                new CategoryBrandRelationEntity(category),
+                new UpdateWrapper<CategoryBrandRelationEntity>().eq("catelog_id", category.getCatId())
+        );
+    }
+
+    //[225,34,2]
+    private List<Long> findParentPath(Long catelogId, List<Long> paths) {
+        //1.收集当前节点id
+        paths.add(catelogId);
+        CategoryEntity byId = this.getById(catelogId);
+        if (byId.getParentCid() != 0) {
+            this.findParentPath(byId.getParentCid(), paths);
+        }
+        return paths;
     }
 
     /**
