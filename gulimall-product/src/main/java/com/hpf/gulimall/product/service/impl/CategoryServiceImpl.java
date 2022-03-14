@@ -89,7 +89,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     private List<Long> findParentPath(Long catelogId, List<Long> paths) {
         //1.收集当前节点id
         paths.add(catelogId);
-        CategoryEntity byId = this.getById(catelogId);
+        CategoryEntity byId = baseMapper.selectById(catelogId);
         if (byId.getParentCid() != 0) {
             this.findParentPath(byId.getParentCid(), paths);
         }
