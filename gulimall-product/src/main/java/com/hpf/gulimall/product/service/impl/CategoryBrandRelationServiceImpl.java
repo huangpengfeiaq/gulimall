@@ -7,7 +7,9 @@ import com.hpf.gulimall.product.entity.BrandEntity;
 import com.hpf.gulimall.product.entity.CategoryEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -68,6 +70,13 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
         UpdateWrapper<CategoryBrandRelationEntity> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("catelog_id", catId);
         this.baseMapper.update(entity, updateWrapper);
+    }
+
+    @Override
+    public List<BrandEntity> getBrandsByCatId(Long catId) {
+        List<CategoryBrandRelationEntity> list = baseMapper.selectList(new QueryWrapper<CategoryBrandRelationEntity>().eq("catlog_id", catId));
+        return list.stream().map(item -> brandDao.selectById(item.getBrandId())).collect(Collectors.toList());
+
     }
 
 }

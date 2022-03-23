@@ -4,13 +4,13 @@ spring:
   cloud:
     gateway:
       routes: # 网关路由配置
-        # 第三方服务
-        - id: third_party_route
-          uri: lb://gulimall-third-party
+        # 会员服务
+        - id: member_route
+          uri: lb://gulimall-member
           predicates:
-            - Path=/api/thirdparty/**
+            - Path=/api/member/**
           filters:
-            - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
         # 商品服务
         - id: product_route
           uri: lb://gulimall-product
@@ -18,6 +18,13 @@ spring:
             - Path=/api/product/**
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
+        # 第三方服务
+        - id: third_party_route
+          uri: lb://gulimall-third-party
+          predicates:
+            - Path=/api/thirdparty/**
+          filters:
+            - RewritePath=/api/thirdparty/(?<segment>.*),/$\{segment}
         # 前端项目，/api前缀
         - id: admin_route # 路由id，自定义，只要唯一即可
           uri: lb://renren-fast # 路由的目标地址 (lb就是负载均衡，后面跟服务名称 / http就是固定地址)
@@ -25,8 +32,8 @@ spring:
             - Path=/api/** # 这个是按照路径匹配，只要以/api/开头就符合要求
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
-#      default-filters: # 默认过滤器，会对所有的路由请求都生效
-#        - AddRequestHeader=Truth, Itcast is freaking awesome! # 添加请求头
+      #      default-filters: # 默认过滤器，会对所有的路由请求都生效
+      #        - AddRequestHeader=Truth, Itcast is freaking awesome! # 添加请求头
       globalcors: # 全局的跨域处理
         add-to-simple-url-handler-mapping: true # 解决options请求被拦截问题
         corsConfigurations:
