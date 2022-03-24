@@ -74,7 +74,7 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
 
     @Override
     public List<BrandEntity> getBrandsByCatId(Long catId) {
-        List<CategoryBrandRelationEntity> list = baseMapper.selectList(new QueryWrapper<CategoryBrandRelationEntity>().eq("catlog_id", catId));
+        List<CategoryBrandRelationEntity> list = baseMapper.selectList(new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", catId));
         return list.stream().map(item -> brandDao.selectById(item.getBrandId())).collect(Collectors.toList());
 
     }

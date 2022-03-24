@@ -9,6 +9,7 @@ import com.hpf.gulimall.product.entity.AttrGroupEntity;
 import com.hpf.gulimall.product.entity.CategoryEntity;
 import com.hpf.gulimall.product.service.CategoryService;
 import com.hpf.gulimall.product.vo.AttrGroupRelationVO;
+import com.hpf.gulimall.product.vo.AttrGroupWithAttrsVO;
 import com.hpf.gulimall.product.vo.AttrRespVO;
 import com.hpf.gulimall.product.vo.AttrVO;
 import org.springframework.beans.BeanUtils;
