@@ -3,7 +3,9 @@ package com.hpf.gulimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hpf.common.utils.PageUtils;
 import com.hpf.gulimall.product.entity.SpuImagesEntity;
+import com.hpf.gulimall.product.vo.Images;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +18,7 @@ import java.util.Map;
 public interface SpuImagesService extends IService<SpuImagesEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void saveImages(Long spuId, List<String> images);
 }
 
