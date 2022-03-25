@@ -1,11 +1,16 @@
 package com.hpf.gulimall.product.service.impl;
 
+import com.hpf.common.utils.R;
+import com.hpf.feign.client.CouponClient;
+import com.hpf.common.to.SkuReductionTO;
+import com.hpf.common.to.SpuBoundTO;
 import com.hpf.gulimall.product.entity.*;
 import com.hpf.gulimall.product.service.*;
 import com.hpf.gulimall.product.vo.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +24,7 @@ import com.hpf.common.utils.Query;
 
 import com.hpf.gulimall.product.dao.SpuInfoDao;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 
@@ -40,6 +46,8 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     private SkuImagesService skuImagesService;
     @Resource
     private SkuSaleAttrValueService skuSaleAttrValueService;
+    @Resource
+    private CouponClient couponClient;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -51,6 +59,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         return new PageUtils(page);
     }
 
+    //TODO 待高级部分完善
     @Transactional
     @Override
     public void saveSpuInfo(SpuSaveVO vo) {
@@ -86,6 +95,14 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         attrValueService.saveProductAttr(collect);
 
         //5.保存spu的积分信息 gulimall_sms.sms_spu_bounds
+        Bounds bounds = vo.getBounds();
+        SpuBoundTO spuBoundTO = new SpuBoundTO();
+        BeanUtils.copyProperties(bounds, spuBoundTO);
+        spuBoundTO.setSpuId(infoEntity.getId());
+        R r = couponClient.saveSpuBounds(spuBoundTO);
+        if (r.getCode() != 0) {
+            log.error("远程保存spu积分信息失败");
+        }
 
         //5.保存当前spu对应的所有sku信息
         //5.1 sku基本信息 .pms_sku_info
@@ -109,13 +126,18 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                 Long skuId = skuInfoEntity.getSkuId();
 
                 //5.2 sku的图片信息 .pms_sku_images
-                List<SkuImagesEntity> imagesEntities = item.getImages().stream().map(img -> {
-                    SkuImagesEntity skuImagesEntity = new SkuImagesEntity();
-                    skuImagesEntity.setSkuId(skuId);
-                    skuImagesEntity.setImgUrl(img.getImgUrl());
-                    skuImagesEntity.setDefaultImg(img.getDefaultImg());
-                    return skuImagesEntity;
-                }).collect(Collectors.toList());
+                List<SkuImagesEntity> imagesEntities = item
+                        .getImages()
+                        .stream()
+                        .map(img -> {
+                            SkuImagesEntity skuImagesEntity = new SkuImagesEntity();
+                            skuImagesEntity.setSkuId(skuId);
+                            skuImagesEntity.setImgUrl(img.getImgUrl());
+                            skuImagesEntity.setDefaultImg(img.getDefaultImg());
+                            return skuImagesEntity;
+                        })
+                        .filter(img -> !StringUtils.isEmpty(img.getImgUrl()))
+                        .collect(Collectors.toList());
                 skuImagesService.saveBatch(imagesEntities);
 
                 //5.3 sku的销售属性信息 .pms_sku_sale_attr_value
@@ -131,6 +153,15 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                 //5.4 sku的优惠信、满减信息 gulimall_sms.sms_sku_ladder
                 //gulimall_sms.sms_sku_full_reduction
                 //gulimall_sms.sms_member_price
+                SkuReductionTO skuReductionTO = new SkuReductionTO();
+                BeanUtils.copyProperties(item, skuReductionTO);
+                skuReductionTO.setSkuId(skuId);
+                if (skuReductionTO.getFullCount() > 0 || skuReductionTO.getFullPrice().compareTo(new BigDecimal(0)) > 0) {
+                    R r1 = couponClient.saveSkuReduction(skuReductionTO);
+                    if (r1.getCode() != 0) {
+                        log.error("远程保存sku的优惠信、满减信息失败");
+                    }
+                }
             });
         }
     }
