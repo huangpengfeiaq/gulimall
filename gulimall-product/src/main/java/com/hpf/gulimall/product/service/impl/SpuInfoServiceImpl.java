@@ -1,5 +1,6 @@
 package com.hpf.gulimall.product.service.impl;
 
+import com.hpf.common.to.es.SkuEsModel;
 import com.hpf.common.utils.R;
 import com.hpf.feign.client.CouponClient;
 import com.hpf.common.to.SkuReductionTO;
@@ -199,6 +200,12 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         return new PageUtils(page);
 
 
+    }
+
+    @Override
+    public void up(Long spuId) {
+        //1.组装需要的数据
+        SkuEsModel esModel = new SkuEsModel();
     }
 
 
