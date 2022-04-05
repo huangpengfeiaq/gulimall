@@ -12,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,10 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     private SkuSaleAttrValueService skuSaleAttrValueService;
     @Resource
     private CouponClient couponClient;
+    @Resource
+    private BrandService brandService;
+    @Resource
+    private CategoryService categoryService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -204,8 +209,34 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
 
     @Override
     public void up(Long spuId) {
-        //1.组装需要的数据
-        SkuEsModel esModel = new SkuEsModel();
+        //1.查出当前spu对应的所有sku信息，品牌的名字
+        List<SkuInfoEntity> skus = skuInfoService.getSkusBySpuId(spuId);
+
+        //TODO 4.查询当前sku所有可以被用来检索的规格属性
+
+        //2.封装每个sku信息
+        List<SkuEsModel> upProducts = skus.stream().map(sku -> {
+            //组装需要的数据
+            SkuEsModel esModel = new SkuEsModel();
+            BeanUtils.copyProperties(sku, esModel);
+            esModel.setSkuPrice(sku.getPrice());
+            esModel.setSkuImg(sku.getSkuDefaultImg());
+            //TODO 1.发送远程调用，是否有库存
+//            esModel.setHasStock();
+            //TODO 2.热度评分。0
+//            esModel.setHotScore();
+            //TODO 3.查询品牌和分类的名字信息
+            BrandEntity brand = brandService.getById(esModel.getBrandId());
+            esModel.setBrandName(brand.getName());
+            esModel.setBrandImg(brand.getLogo());
+            CategoryEntity category = categoryService.getById(esModel.getCatalogId());
+            esModel.setCatalogName(category.getName());
+
+            return esModel;
+        }).collect(Collectors.toList());
+
+        //TODO 5.将数据发送给es进行保存：gulimall-search
+
     }
 
 
