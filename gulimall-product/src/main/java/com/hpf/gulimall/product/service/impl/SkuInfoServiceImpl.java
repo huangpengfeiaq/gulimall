@@ -24,7 +24,7 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<SkuInfoEntity> page = this.page(
                 new Query<SkuInfoEntity>().getPage(params),
-                new QueryWrapper<SkuInfoEntity>()
+                new QueryWrapper<>()
         );
 
         return new PageUtils(page);
@@ -69,8 +69,7 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
 
     @Override
     public List<SkuInfoEntity> getSkusBySpuId(Long spuId) {
-        List<SkuInfoEntity> list = baseMapper.selectList(new QueryWrapper<SkuInfoEntity>().eq("spu_id", spuId));
-        return list;
+        return baseMapper.selectList(new QueryWrapper<SkuInfoEntity>().eq("spu_id", spuId));
 
     }
 

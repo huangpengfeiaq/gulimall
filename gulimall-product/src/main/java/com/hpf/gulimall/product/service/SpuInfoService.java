@@ -27,7 +27,6 @@ public interface SpuInfoService extends IService<SpuInfoEntity> {
 
     /**
      * 商品上架
-     * @param spuId
      */
     void up(Long spuId);
 }
