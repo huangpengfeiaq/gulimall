@@ -32,8 +32,6 @@ public interface AttrService extends IService<AttrEntity> {
 
     /**
      * 根据分组id查找关联的所有基本属性
-     * @param attrgroupId
-     * @return
      */
     List<AttrEntity> getRelationAttr(Long attrgroupId);
 
@@ -48,10 +46,10 @@ public interface AttrService extends IService<AttrEntity> {
      *    order: 'asc/desc',//排序方式
      *    key: '华为'//检索关键字
      * }
-     * @param attrgroupId
-     * @return
      */
     PageUtils getNoRelationAttr(Map<String, Object> params, Long attrgroupId);
+
+    List<Long> selectSearchAttrIds(List<Long> attrIds);
 
 }
 
