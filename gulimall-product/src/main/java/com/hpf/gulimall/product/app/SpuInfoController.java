@@ -1,4 +1,4 @@
-package com.hpf.gulimall.product.controller;
+package com.hpf.gulimall.product.app;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -12,6 +12,8 @@ import com.hpf.gulimall.product.service.SpuInfoService;
 import com.hpf.common.utils.PageUtils;
 import com.hpf.common.utils.R;
 
+import javax.annotation.Resource;
+
 
 /**
  * spu信息
@@ -23,7 +25,7 @@ import com.hpf.common.utils.R;
 @RestController
 @RequestMapping("product/spuinfo")
 public class SpuInfoController {
-    @Autowired
+    @Resource
     private SpuInfoService spuInfoService;
 
     /**

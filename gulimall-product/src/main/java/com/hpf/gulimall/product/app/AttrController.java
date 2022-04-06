@@ -1,4 +1,4 @@
-package com.hpf.gulimall.product.controller;
+package com.hpf.gulimall.product.app;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -8,7 +8,6 @@ import com.hpf.gulimall.product.vo.AttrVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.hpf.gulimall.product.entity.AttrEntity;
 import com.hpf.gulimall.product.service.AttrService;
 import com.hpf.common.utils.PageUtils;
 import com.hpf.common.utils.R;
