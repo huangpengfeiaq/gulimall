@@ -39,6 +39,11 @@ spring:
             - Path=/api/** # 这个是按照路径匹配，只要以/api/开头就符合要求
           filters:
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+        # 主机nginx
+        - id: gulimall_host_route
+          uri: lb://gulimall-product
+          predicates:
+            - Host=gulimall.com,item.gulimall.com
       #      default-filters: # 默认过滤器，会对所有的路由请求都生效
       #        - AddRequestHeader=Truth, Itcast is freaking awesome! # 添加请求头
       globalcors: # 全局的跨域处理
