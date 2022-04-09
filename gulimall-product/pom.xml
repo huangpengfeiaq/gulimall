@@ -12,6 +12,13 @@
     <artifactId>gulimall-product</artifactId>
 
     <dependencies>
+        <!--lettuce5.1.8存在bug，链接netty导致内存溢出-->
+        <!--        <dependency>-->
+        <!--            <groupId>io.lettuce</groupId>-->
+        <!--            <artifactId>lettuce-core</artifactId>-->
+        <!--            <version>5.1.8.RELEASE</version>-->
+        <!--            <scope>compile</scope>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>com.hpf.gulimall</groupId>
             <artifactId>gulimall-feign</artifactId>
