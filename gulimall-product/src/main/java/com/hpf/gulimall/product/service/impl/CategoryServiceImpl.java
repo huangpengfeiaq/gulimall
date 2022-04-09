@@ -1,9 +1,13 @@
 package com.hpf.gulimall.product.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.hpf.gulimall.product.dao.CategoryBrandRelationDao;
 import com.hpf.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.hpf.gulimall.product.vo.Catelog2Vo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,6 +23,7 @@ import com.hpf.gulimall.product.dao.CategoryDao;
 import com.hpf.gulimall.product.entity.CategoryEntity;
 import com.hpf.gulimall.product.service.CategoryService;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 
@@ -27,6 +32,9 @@ import javax.annotation.Resource;
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
     @Resource
     private CategoryBrandRelationDao categoryBrandRelationDao;
+    @Autowired
+    StringRedisTemplate redisTemplate;
+
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -120,13 +128,36 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     public List<CategoryEntity> getLevel1() {
         long l = System.currentTimeMillis();
         List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
-        System.out.println("消耗时间："+(System.currentTimeMillis() - l));
+        System.out.println("消耗时间：" + (System.currentTimeMillis() - l));
         return categoryEntities;
     }
 
-    //    @Cacheable(value = "category",key = "#root.methodName")
     @Override
-    public Map<String, List<Catelog2Vo>> getCatelogJson() {
+    public Map<String, List<Catelog2Vo>> getCatalogJson() {
+        Map<String, List<Catelog2Vo>> result;
+        //从缓存中取出的json数据要逆转为能用的对象类型,【序列化与发序列化】
+
+        //1.加入缓存逻辑，缓存中的数据是json字符串
+        //JSON跨语言,跨平台兼容
+        String catalogJSON = redisTemplate.opsForValue().get("catalogJSON");
+        if (StringUtils.isEmpty(catalogJSON)) {
+            //2.缓存中没有，查询数据库
+            result = getCatalogJsonFromDb();
+            //3.将查到的数据放入缓存，将查出的对象转为json放在缓存中
+            redisTemplate.opsForValue().set("catalogJSON", JSON.toJSONString(result));
+        } else {
+            //2.缓存中有，转为我们指定的对象
+            result = JSON.parseObject(catalogJSON, new TypeReference<Map<String, List<Catelog2Vo>>>() {
+            });
+        }
+        //4.返回结果
+        return result;
+    }
+
+    /**
+     * 从数据库查询并封装分类数据
+     */
+    public Map<String, List<Catelog2Vo>> getCatalogJsonFromDb() {
         /*
           优化:将数据库中的多次查询变为一次,存至缓存selectList,需要的数据从list取出,避免频繁的数据库交互
          */
