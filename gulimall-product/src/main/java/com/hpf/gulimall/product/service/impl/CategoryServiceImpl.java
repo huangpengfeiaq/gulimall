@@ -118,7 +118,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     //    @Cacheable(value = {"category"}, key = "#root.method.name")//当前方法的结果需要缓存
     @Override
     public List<CategoryEntity> getLevel1() {
+        long l = System.currentTimeMillis();
         List<CategoryEntity> categoryEntities = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", 0));
+        System.out.println("消耗时间："+(System.currentTimeMillis() - l));
         return categoryEntities;
     }
 

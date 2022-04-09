@@ -43,9 +43,9 @@ public class IndexController {
         return catelogJson;
     }
 
-//    @ResponseBody
-//    @GetMapping("/hello")
-//    public String hello() {
+    @ResponseBody
+    @GetMapping("/hello")
+    public String hello() {
 //        //只有锁名字一样,就是同一把锁
 //        RLock lock = redisson.getLock("my-lock");
 //        //加锁,阻塞式等待
@@ -60,9 +60,9 @@ public class IndexController {
 //            System.out.println("释放锁" + Thread.currentThread().getId());
 //            lock.unlock();
 //        }
-//        return "hello";
-//    }
-//
+        return "hello";
+    }
+
 //
 //    @GetMapping("/write")
 //    @ResponseBody
