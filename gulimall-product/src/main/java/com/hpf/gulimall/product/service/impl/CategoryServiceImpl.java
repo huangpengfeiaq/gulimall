@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -126,6 +127,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return categoryEntities;
     }
 
+    /**
+     * 1.空结果缓存，解决缓存穿透
+     * 2.设置过期时间（加随机值），解决缓存雪崩
+     * 3.加锁，解决缓存击穿
+     */
     @Override
     public Map<String, List<Catelog2Vo>> getCatalogJson() {
         Map<String, List<Catelog2Vo>> result;
@@ -138,7 +144,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             //2.缓存中没有，查询数据库
             result = getCatalogJsonFromDb();
             //3.将查到的数据放入缓存，将查出的对象转为json放在缓存中
-            redisTemplate.opsForValue().set("catalogJSON", JSON.toJSONString(result));
+            redisTemplate.opsForValue().set("catalogJSON", JSON.toJSONString(result),1, TimeUnit.DAYS);
         } else {
             //2.缓存中有，转为我们指定的对象
             result = JSON.parseObject(catalogJSON, new TypeReference<Map<String, List<Catelog2Vo>>>() {
