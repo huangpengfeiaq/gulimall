@@ -131,7 +131,17 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     //    @Cacheable(value = "category",key = "#root.methodName")
     @Override
     public Map<String, List<Catelog2Vo>> getCatalogJson() {
-        return getCatalog();
+        //1.从缓存中取出数据
+        String catalogJSON = redisTemplate.opsForValue().get("catalogJSON");
+
+        //2.x.若缓存中有数据
+        if (!StringUtils.isEmpty(catalogJSON)) {
+            return JSON.parseObject(catalogJSON, new TypeReference<Map<String, List<Catelog2Vo>>>() {
+            });
+        }
+
+        //2.y.若缓存中没有数据，可选以下任一带锁版本
+        return getCatalogJsonFromDbWithRedisLock();
     }
 
 ///////////////////////////////////以下为各种缓存加锁版本///////////////////////////////////////////////////////////////
@@ -162,9 +172,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      * @return 分类数据集
      */
     public Map<String, List<Catelog2Vo>> getCatalogJsonFromDbWithRedisLock() {
-        //占分布式锁,同时设置锁过期时间,必须和加锁同步原子操作
+
+        //1.占分布式锁,去redis占坑。同时设置锁过期时间,必须和加锁同步，原子操作
         String uuid = UUID.randomUUID().toString();
-        Boolean lock = redisTemplate.opsForValue().setIfAbsent("lock", "111", 300, TimeUnit.SECONDS);
+        Boolean lock = redisTemplate.opsForValue().setIfAbsent("lock", uuid, 300, TimeUnit.SECONDS);
+
         if (Boolean.TRUE.equals(lock)) {
             //加锁成功,执行业务
             Map<String, List<Catelog2Vo>> dataFromDB;
@@ -172,8 +184,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                 dataFromDB = getCatalog();
             } finally {
                 String script = "if redis.call('get',KEYS[1]) == ARGV[1] then return redis.call('del',KEYS[1])else return 0 end";
-                //删除锁,Lua脚本
-                Long lock1 = redisTemplate.execute(new DefaultRedisScript<>(script, Long.class), Arrays.asList("lock", uuid));
+                //删除锁,Lua脚本，原子操作
+                Long lock1 = redisTemplate.execute(new DefaultRedisScript<>(script, Long.class), Collections.singletonList("lock"), uuid);
             }
             return dataFromDB;
         } else {
@@ -227,6 +239,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         }
 
         //2.缓存中没有，从数据库查询并封装分类数据
+        System.out.println("查询了数据库...");
 
         //2.1.将数据库中的多次查询变为一次,存至缓存selectList,需要的数据从list取出,避免频繁的数据库交互2
         List<CategoryEntity> selectList = baseMapper.selectList(null);
