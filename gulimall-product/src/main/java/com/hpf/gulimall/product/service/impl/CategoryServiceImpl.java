@@ -256,6 +256,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                     return catelog2Vos;
                 }
         ));
+
         //3.将查到的数据放入缓存，将查出的对象转为json放在缓存中
         redisTemplate.opsForValue().set("catalogJSON", JSON.toJSONString(parent_cid), 1, TimeUnit.DAYS);
         return parent_cid;
