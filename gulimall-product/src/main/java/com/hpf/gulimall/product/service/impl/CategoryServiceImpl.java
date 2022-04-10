@@ -219,11 +219,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         //1.加入缓存逻辑，缓存中的数据是json字符串
         //JSON跨语言,跨平台兼容
         String catalogJSON = redisTemplate.opsForValue().get("catalogJSON");
+
+        //2.缓存中有，转为我们指定的对象
         if (!StringUtils.isEmpty(catalogJSON)) {
-            //2.缓存中有，转为我们指定的对象
             return JSON.parseObject(catalogJSON, new TypeReference<Map<String, List<Catelog2Vo>>>() {
             });
         }
+
         //2.缓存中没有，从数据库查询并封装分类数据
 
         //2.1.将数据库中的多次查询变为一次,存至缓存selectList,需要的数据从list取出,避免频繁的数据库交互2
