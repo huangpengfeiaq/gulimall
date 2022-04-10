@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.hpf.gulimall.product.dao.CategoryBrandRelationDao;
 import com.hpf.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.hpf.gulimall.product.vo.Catelog2Vo;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -36,6 +38,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     private CategoryBrandRelationDao categoryBrandRelationDao;
     @Autowired
     StringRedisTemplate redisTemplate;
+    @Resource
+    private RedissonClient redisson;
 
 
     @Override
@@ -152,7 +156,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      * @return 分类数据集
      */
     public Map<String, List<Catelog2Vo>> getCatalogJsonFromDb() {
-        return getCatalog();
+        return getDataFromDB();
     }
 
     /**
@@ -162,7 +166,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      */
     public Map<String, List<Catelog2Vo>> getCatalogJsonFromDbWithLocalLock() {
         synchronized (this) {
-            return getCatalog();
+            return getDataFromDB();
         }
     }
 
@@ -181,7 +185,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             //加锁成功,执行业务
             Map<String, List<Catelog2Vo>> dataFromDB;
             try {
-                dataFromDB = getCatalog();
+                dataFromDB = getDataFromDB();
             } finally {
                 String script = "if redis.call('get',KEYS[1]) == ARGV[1] then return redis.call('del',KEYS[1])else return 0 end";
                 //删除锁,Lua脚本，原子操作
@@ -199,23 +203,23 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         }
     }
 
-//    /**
-//     * 分布式锁Redisson
-//     *
-//     * @return 分类数据集
-//     */
-//    public Map<String, List<Catelog2Vo>> getCatalogJsonFromDbWithRedissonLock() {
-//        RLock lock = redisson.getLock("catalogJson-lock");
-//        lock.lock();
-//        //加锁成功,执行业务
-//        Map<String, List<Catelog2Vo>> dataFromDB;
-//        try {
-//            dataFromDB = getDataFromDB();
-//        } finally {
-//            lock.unlock();
-//        }
-//        return dataFromDB;
-//    }
+    /**
+     * 分布式锁Redisson
+     *
+     * @return 分类数据集
+     */
+    public Map<String, List<Catelog2Vo>> getCatalogJsonFromDbWithRedissonLock() {
+        RLock lock = redisson.getLock("catalogJson-lock");
+        lock.lock();
+        //加锁成功,执行业务
+        Map<String, List<Catelog2Vo>> dataFromDB;
+        try {
+            dataFromDB = getDataFromDB();
+        } finally {
+            lock.unlock();
+        }
+        return dataFromDB;
+    }
 
 
     /**
@@ -225,7 +229,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      *
      * @return 包含redis缓存的分类数据
      */
-    private Map<String, List<Catelog2Vo>> getCatalog() {
+    private Map<String, List<Catelog2Vo>> getDataFromDB() {
         //从缓存中取出的json数据要逆转为能用的对象类型,【序列化与发序列化】
 
         //1.加入缓存逻辑，缓存中的数据是json字符串
