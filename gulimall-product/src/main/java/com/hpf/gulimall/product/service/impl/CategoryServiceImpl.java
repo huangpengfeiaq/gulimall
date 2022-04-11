@@ -7,8 +7,10 @@ import com.hpf.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.hpf.gulimall.product.service.CategoryBrandRelationService;
 import com.hpf.gulimall.product.vo.Catelog2Vo;
 import org.redisson.api.RLock;
+import org.redisson.api.RReadWriteLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -40,7 +42,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
     @Autowired
     StringRedisTemplate redisTemplate;
     @Resource
-    private RedissonClient redisson;
+    private RedissonClient redissonClient;
 
 
     @Override
@@ -121,15 +123,38 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     /**
      * 级联更新所有关联的数据
+     * <p>
+     * >@CacheEvict:失效模式
+     * >@CachePut:双写模式，需要有返回值
+     * 1、同时进行多种缓存操作：@Caching
+     * 2、指定删除某个分区下的所有数据 @CacheEvict(value = "category",allEntries = true)
+     * 3、存储同一类型的数据，都可以指定为同一分区
      */
-    @Transactional
+    // @Caching(evict = {
+    //         @CacheEvict(value = "category",key = "'getLevel1'"),
+    //         @CacheEvict(value = "category",key = "'getCatalogJson'")
+    // })
+    @CacheEvict(value = "category", allEntries = true)       //删除某个分区下的所有数据
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateCascade(CategoryEntity category) {
-        this.updateById(category);
-        categoryBrandRelationService.update(
-                new CategoryBrandRelationEntity(category),
-                new UpdateWrapper<CategoryBrandRelationEntity>().eq("catelog_id", category.getCatId())
-        );
+
+        RReadWriteLock readWriteLock = redissonClient.getReadWriteLock("catalogJson-lock");
+        //创建写锁
+        RLock rLock = readWriteLock.writeLock();
+
+        try {
+            rLock.lock();
+            this.baseMapper.updateById(category);
+            categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            rLock.unlock();
+        }
+
+        //同时修改缓存中的数据
+        //删除缓存,等待下一次主动查询进行更新
     }
 
     /**
@@ -310,7 +335,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         //（锁的粒度，越细越快:具体缓存的是某个数据，11号商品） product-11-lock
         //RLock catalogJsonLock = redissonClient.getLock("catalogJson-lock");
         //创建读锁
-        RLock lock = redisson.getLock("catalogJson-lock");
+        RLock lock = redissonClient.getLock("catalogJson-lock");
         lock.lock();
         //加锁成功,执行业务
         Map<String, List<Catelog2Vo>> dataFromDB;

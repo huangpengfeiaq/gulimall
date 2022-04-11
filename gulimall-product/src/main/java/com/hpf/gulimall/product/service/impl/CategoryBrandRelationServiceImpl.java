@@ -73,6 +73,19 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     }
 
     @Override
+    public void updateBrand(Long brandId, String name) {
+        CategoryBrandRelationEntity relationEntity = new CategoryBrandRelationEntity();
+        relationEntity.setBrandId(brandId);
+        relationEntity.setBrandName(name);
+        this.update(relationEntity,new UpdateWrapper<CategoryBrandRelationEntity>().eq("brand_id",brandId));
+    }
+
+    @Override
+    public void updateCategory(Long catId, String name) {
+        this.baseMapper.updateCategory(catId,name);
+    }
+
+    @Override
     public List<BrandEntity> getBrandsByCatId(Long catId) {
         List<CategoryBrandRelationEntity> list = baseMapper.selectList(new QueryWrapper<CategoryBrandRelationEntity>().eq("catelog_id", catId));
         return list.stream().map(item -> brandDao.selectById(item.getBrandId())).collect(Collectors.toList());

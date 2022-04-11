@@ -27,6 +27,10 @@ public interface CategoryBrandRelationService extends IService<CategoryBrandRela
     @Deprecated
     void updateCategoryNameByCategoryId(Long catId, String categoryName);
 
+    void updateBrand(Long brandId, String name);
+
+    void updateCategory(Long catId, String name);
+
     List<BrandEntity> getBrandsByCatId(Long catId);
 }
 
