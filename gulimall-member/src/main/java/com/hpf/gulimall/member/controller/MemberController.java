@@ -14,7 +14,7 @@ import com.hpf.gulimall.member.entity.MemberEntity;
 import com.hpf.gulimall.member.service.MemberService;
 import com.hpf.common.utils.PageUtils;
 import com.hpf.common.utils.R;
-import com.hpf.feign.client.CouponClient;
+import com.hpf.feign.client.CouponFeignClient;
 
 
 
@@ -32,14 +32,14 @@ public class MemberController {
     private MemberService memberService;
 
     @Autowired
-    private CouponClient couponClient;
+    private CouponFeignClient couponFeignClient;
 
     @RequestMapping("/coupons")
     public R test(){
         MemberEntity memberEntity = new MemberEntity();
         memberEntity.setNickname("张三");
 
-        R r = couponClient.memberCoupons();
+        R r = couponFeignClient.memberCoupons();
         return R.ok().put("member",memberEntity).put("coupons",r.get("coupons"));
     }
 

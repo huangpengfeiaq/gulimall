@@ -1,8 +1,8 @@
 package com.hpf.gulimall.product;
 
-import com.hpf.feign.client.CouponClient;
-import com.hpf.feign.client.SearchClient;
-import com.hpf.feign.client.WareClient;
+import com.hpf.feign.client.CouponFeignClient;
+import com.hpf.feign.client.SearchFeignClient;
+import com.hpf.feign.client.WareFeignClient;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -59,7 +59,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 //@EnableRedisHttpSession     //开启springsession
 @EnableCaching      //开启缓存功能
-@EnableFeignClients(clients = {CouponClient.class, WareClient.class, SearchClient.class})
+@EnableFeignClients(clients = {CouponFeignClient.class, WareFeignClient.class, SearchFeignClient.class})
 @EnableDiscoveryClient
 @MapperScan("com.hpf.gulimall.product.dao")
 @SpringBootApplication

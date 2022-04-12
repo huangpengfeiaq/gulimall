@@ -25,25 +25,22 @@ public class R extends HashMap<String, Object> {
 
     //利用fastJson进行逆转
     public <T> T getData(TypeReference<T> typeReference) {
-        Object data = get("data");//默认map
-        return JSON.parseObject(JSON.toJSONString(data), typeReference);
-    }
-
-    public R setData(Object data) {
-        put("data", data);
-        return this;
+        return getKey("data", typeReference);
     }
 
     //利用fastJson进行逆转
-    public <T> T getData2(String key, TypeReference<T> typeReference) {
-        Object data = get(key);//默认map
-        String s = JSON.toJSONString(data);
-        return JSON.parseObject(s, typeReference);
+    public <T> T getKey(String key, TypeReference<T> typeReference) {
+        return JSON.parseObject(JSON.toJSONString(get(key)), typeReference);
     }
 
     public R() {
         put("code", 0);
         put("msg", "success");
+    }
+
+    public R setData(Object data) {
+        put("data", data);
+        return this;
     }
 
     public static R error() {

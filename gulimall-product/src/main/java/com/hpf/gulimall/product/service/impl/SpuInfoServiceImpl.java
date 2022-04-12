@@ -5,11 +5,11 @@ import com.hpf.common.constant.ProductConstant;
 import com.hpf.common.to.SkuHasStockVo;
 import com.hpf.common.to.es.SkuEsModel;
 import com.hpf.common.utils.R;
-import com.hpf.feign.client.CouponClient;
+import com.hpf.feign.client.CouponFeignClient;
 import com.hpf.common.to.SkuReductionTO;
 import com.hpf.common.to.SpuBoundTO;
-import com.hpf.feign.client.SearchClient;
-import com.hpf.feign.client.WareClient;
+import com.hpf.feign.client.SearchFeignClient;
+import com.hpf.feign.client.WareFeignClient;
 import com.hpf.gulimall.product.entity.*;
 import com.hpf.gulimall.product.service.*;
 import com.hpf.gulimall.product.vo.*;
@@ -37,11 +37,11 @@ import javax.annotation.Resource;
 public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> implements SpuInfoService {
 
     @Resource
-    private CouponClient couponClient;
+    private CouponFeignClient couponFeignClient;
     @Resource
-    private WareClient wareClient;
+    private WareFeignClient wareFeignClient;
     @Resource
-    private SearchClient searchClient;
+    private SearchFeignClient searchFeignClient;
     @Resource
     private SpuInfoDescService spuInfoDescService;
     @Resource
@@ -111,7 +111,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         SpuBoundTO spuBoundTO = new SpuBoundTO();
         BeanUtils.copyProperties(bounds, spuBoundTO);
         spuBoundTO.setSpuId(infoEntity.getId());
-        R r = couponClient.saveSpuBounds(spuBoundTO);
+        R r = couponFeignClient.saveSpuBounds(spuBoundTO);
         if (r.getCode() != 0) {
             log.error("远程保存spu积分信息失败");
         }
@@ -169,7 +169,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
                 BeanUtils.copyProperties(item, skuReductionTO);
                 skuReductionTO.setSkuId(skuId);
                 if (skuReductionTO.getFullCount() > 0 || skuReductionTO.getFullPrice().compareTo(new BigDecimal(0)) > 0) {
-                    R r1 = couponClient.saveSkuReduction(skuReductionTO);
+                    R r1 = couponFeignClient.saveSkuReduction(skuReductionTO);
                     if (r1.getCode() != 0) {
                         log.error("远程保存sku的优惠信、满减信息失败");
                     }
@@ -239,7 +239,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         // 1.发送远程调用，是否有库存
         Map<Long, Boolean> sotckMap = null;
         try {
-            R hasStock = wareClient.getSkuHasStock(skuIds);
+            R hasStock = wareFeignClient.getSkuHasStock(skuIds);
             sotckMap = hasStock
                     .getData(new TypeReference<List<SkuHasStockVo>>() {
                     })
@@ -278,7 +278,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
         }).collect(Collectors.toList());
 
         // 5.将数据发送给es进行保存：gulimall-search
-        R r = searchClient.productStatusUp(upProducts);
+        R r = searchFeignClient.productStatusUp(upProducts);
         if (r.getCode() == 0) {
             //远程调用成功
             //修改spu状态

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @FeignClient("gulimall-coupon")
-public interface CouponClient {
+public interface CouponFeignClient {
     @RequestMapping("coupon/coupon/member/list")
     R memberCoupons();
 
