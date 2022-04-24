@@ -53,7 +53,7 @@
         {
           "term": {
             "hasStock": {
-              "value": "true"
+              "value": "false"
             }
           }
         },
