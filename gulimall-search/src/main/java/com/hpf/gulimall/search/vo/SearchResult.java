@@ -3,6 +3,7 @@ package com.hpf.gulimall.search.vo;
 import com.hpf.common.to.es.SkuEsModel;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -10,7 +11,7 @@ public class SearchResult {
     /**
      * 查询到的所有商品信息
      */
-    private List<SkuEsModel> product;
+    private List<SkuEsModel> products;
     /**
      * 当前页码
      */
@@ -22,7 +23,7 @@ public class SearchResult {
     /**
      * 总页码
      */
-    private Integer totalPages;
+    private Long totalPage;
 
     private List<Integer> pageNavs;
     /**
@@ -41,7 +42,8 @@ public class SearchResult {
     //===========================以上是返回给页面的所有信息============================//
 
     /* 面包屑导航数据 */
-    private List<NavVo> navs;
+    private List<NavVo> navs = new ArrayList<>();
+    private List<Long> attrIds = new ArrayList<>();
 
     @Data
     public static class NavVo {
