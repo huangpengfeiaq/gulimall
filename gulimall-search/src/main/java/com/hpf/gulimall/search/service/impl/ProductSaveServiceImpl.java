@@ -25,29 +25,36 @@ import java.util.stream.Collectors;
 @Service
 public class ProductSaveServiceImpl implements ProductSaveService {
     @Resource
-    RestHighLevelClient restHighLevelClient;
+    RestHighLevelClient esRestClient;
 
     @Override
     public boolean productStatusUp(List<SkuEsModel> skuEsModels) throws IOException {
-        //保存到es
-        //1.给es建立索引product(在Kibana中操作!)
-        //2.给es保存数据
+        //1.在es中建立索引，建立号映射关系（doc/json/product-mapping.json）
+
+        //2. 在ES中保存这些数据
         BulkRequest bulkRequest = new BulkRequest();
-        for (SkuEsModel model : skuEsModels) {
+        for (SkuEsModel skuEsModel : skuEsModels) {
             //构造保存请求
             IndexRequest indexRequest = new IndexRequest(EsConstant.PRODUCT_INDEX);
-            indexRequest.id(model.getSkuId().toString());
-            indexRequest.source(JSON.toJSONString(model), XContentType.JSON);
+            indexRequest.id(skuEsModel.getSkuId().toString());
+            String jsonString = JSON.toJSONString(skuEsModel);
+            indexRequest.source(jsonString, XContentType.JSON);
             bulkRequest.add(indexRequest);
         }
-        BulkResponse bulk = restHighLevelClient.bulk(bulkRequest, ElasticSearchConfig.COMMON_OPTIONS);
-        //TODO 批量处理错误
-        boolean b = bulk.hasFailures();
+
+
+        BulkResponse bulk = esRestClient.bulk(bulkRequest, ElasticSearchConfig.COMMON_OPTIONS);
+
+        //TODO 如果批量错误
+        boolean hasFailures = bulk.hasFailures();
+
         List<String> collect = Arrays
                 .stream(bulk.getItems())
                 .map(BulkItemResponse::getId)
                 .collect(Collectors.toList());
+
         log.info("商品上架完成:{},返回数据:{},", collect, bulk);
-        return b;
+
+        return hasFailures;
     }
 }

@@ -1,4 +1,4 @@
-package com.hpf.gulimall.search.web;
+package com.hpf.gulimall.search.controller;
 
 import com.hpf.gulimall.search.service.MallSearchService;
 import com.hpf.gulimall.search.vo.SearchParam;
@@ -27,8 +27,9 @@ public class SearchController {
         //1、根据传递来的页面的查询参数，去es中检索商品
         SearchResult result = mallSearchService.search(param);
 
-        model.addAttribute("result", result);
+        model.addAttribute("result",result);
 
         return "list";
     }
+
 }

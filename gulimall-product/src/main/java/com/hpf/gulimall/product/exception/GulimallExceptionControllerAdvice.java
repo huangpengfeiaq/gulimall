@@ -1,6 +1,6 @@
 package com.hpf.gulimall.product.exception;
 
-import com.hpf.common.exception.BizCodeEnume;
+import com.hpf.common.exception.BizCodeEnum;
 import com.hpf.common.utils.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -28,12 +28,12 @@ public class GulimallExceptionControllerAdvice {
             String field = item.getField();
             map.put(field, message);
         });
-        return R.error(BizCodeEnume.VAILD_EXCEPTION.getCode(), BizCodeEnume.VAILD_EXCEPTION.getMsg()).put("data", map);
+        return R.error(BizCodeEnum.VAILD_EXCEPTION.getCode(), BizCodeEnum.VAILD_EXCEPTION.getMessage()).put("data", map);
     }
 
     @ExceptionHandler(value = Throwable.class)
     public R handleException(Throwable throwable) {
         log.error("未知异常：{}，异常类型：{}", throwable.getMessage(), throwable.getClass());
-        return R.error(BizCodeEnume.UNKNOW_EXCEPTION.getCode(), BizCodeEnume.UNKNOW_EXCEPTION.getMsg());
+        return R.error(BizCodeEnum.UNKNOW_EXCEPTION.getCode(), BizCodeEnum.UNKNOW_EXCEPTION.getMessage());
     }
 }

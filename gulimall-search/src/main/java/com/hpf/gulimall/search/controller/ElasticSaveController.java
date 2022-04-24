@@ -1,6 +1,6 @@
 package com.hpf.gulimall.search.controller;
 
-import com.hpf.common.exception.BizCodeEnume;
+import com.hpf.common.exception.BizCodeEnum;
 import com.hpf.common.to.es.SkuEsModel;
 import com.hpf.common.utils.R;
 import com.hpf.gulimall.search.service.ProductSaveService;
@@ -11,29 +11,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 
+
 @Slf4j
-@RequestMapping("/search/save")
+@RequestMapping(value = "/search/save")
 @RestController
-public class ElasticSearchSaveController {
-    @Resource
+public class ElasticSaveController {
+
+    @Autowired
     private ProductSaveService productSaveService;
 
-    @PostMapping("/product")
+
+    /**
+     * 上架商品
+     * @param skuEsModels
+     * @return
+     */
+    @PostMapping(value = "/product")
     public R productStatusUp(@RequestBody List<SkuEsModel> skuEsModels) {
-        boolean b = false;
+
+        boolean status=false;
         try {
-            b = productSaveService.productStatusUp(skuEsModels);
-        } catch (Exception e) {
-            log.error("ElasticSaveController商品上架错误:", e);
+            status = productSaveService.productStatusUp(skuEsModels);
+        } catch (IOException e) {
+            //log.error("商品上架错误{}",e);
+
+            return R.error(BizCodeEnum.PRODUCT_UP_EXCEPTION.getCode(),BizCodeEnum.PRODUCT_UP_EXCEPTION.getMessage());
         }
-        if (!b) {
+
+        if(status){
+            return R.error(BizCodeEnum.PRODUCT_UP_EXCEPTION.getCode(),BizCodeEnum.PRODUCT_UP_EXCEPTION.getMessage());
+        }else {
             return R.ok();
-        } else {
-            return R.error(BizCodeEnume.PRODUCT_UP_EXCEPTION.getCode(), BizCodeEnume.PRODUCT_UP_EXCEPTION.getMsg());
         }
+
     }
+
+
 }
