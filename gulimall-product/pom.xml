@@ -12,6 +12,11 @@
     <artifactId>gulimall-product</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!--lettuce5.1.8存在bug，链接netty导致内存溢出-->
         <!--        <dependency>-->
         <!--            <groupId>io.lettuce</groupId>-->
