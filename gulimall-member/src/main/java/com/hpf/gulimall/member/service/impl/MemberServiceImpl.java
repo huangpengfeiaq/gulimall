@@ -72,11 +72,22 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
     @Override
     public void checkPhoneUnique(String phone) throws PhoneException {
 
+        Long phoneCount = this.baseMapper.selectCount(new QueryWrapper<MemberEntity>().eq("mobile", phone));
+
+        if (phoneCount > 0) {
+            throw new PhoneException();
+        }
+
     }
 
     @Override
     public void checkUserNameUnique(String userName) throws UsernameException {
 
+        Long usernameCount = this.baseMapper.selectCount(new QueryWrapper<MemberEntity>().eq("username", userName));
+
+        if (usernameCount > 0) {
+            throw new UsernameException();
+        }
     }
 
     @Override
