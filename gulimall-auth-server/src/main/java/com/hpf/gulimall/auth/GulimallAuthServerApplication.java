@@ -1,5 +1,7 @@
 package com.hpf.gulimall.auth;
 
+import com.hpf.feign.client.MemberFeignClient;
+import com.hpf.feign.client.ThirdPartFeignClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -13,7 +15,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  * RedisOperationsSessionRepository：Redis操作session，session的增删改查封装类
  */
 @EnableRedisHttpSession     //整合Redis作为session存储
-@EnableFeignClients
+@EnableFeignClients(clients = {ThirdPartFeignClient.class, MemberFeignClient.class})
 @EnableDiscoveryClient
 @SpringBootApplication
 public class GulimallAuthServerApplication {
