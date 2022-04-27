@@ -13,9 +13,9 @@ spring:
         endpoint: oss-cn-beijing.aliyuncs.com
         bucket: gulimall-hpf
       sms:
-        host: https://jumsendsms.market.alicloudapi.com
-        path: /sms/send-upgrade
-        templateId: M72CB42894
+        host: https://dfsns.market.alicloudapi.com
+        path: /data/send_sms
+        templateId: TPL_0000
         appcode: 2b2958b7741348a095bbc7a9278ea012
     nacos:
       server-addr: localhost:8848 # Nacos地址

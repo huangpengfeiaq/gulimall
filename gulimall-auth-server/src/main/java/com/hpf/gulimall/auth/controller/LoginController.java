@@ -78,12 +78,14 @@ public class LoginController {
      * 用户注册
      */
     @PostMapping(value = "/register")
-    public String register(@Valid UserRegisterVo vos, BindingResult result,
-                           RedirectAttributes attributes) {
+    public String register(@Valid UserRegisterVo vos, BindingResult result, RedirectAttributes attributes) {
 
         //如果有错误回到注册页面
         if (result.hasErrors()) {
-            Map<String, String> errors = result.getFieldErrors().stream().collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
+            Map<String, String> errors = result
+                    .getFieldErrors()
+                    .stream()
+                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage, (entity1, entity2) -> entity1));
             attributes.addFlashAttribute("errors", errors);
 
             //效验出错回到注册页面

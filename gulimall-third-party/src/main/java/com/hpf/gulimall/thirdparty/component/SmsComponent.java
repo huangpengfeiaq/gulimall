@@ -25,9 +25,9 @@ public class SmsComponent {
         //最后在header中的格式(中间是英文空格)为Authorization:APPCODE 83359fd73fe94948385f570e3c139105
         headers.put("Authorization", "APPCODE " + appcode);
         Map<String, String> querys = new HashMap<String, String>();
-        querys.put("mobile", phone);
-        querys.put("templateId", templateId);
-        querys.put("value", code);
+        querys.put("content", "code:" + code);
+        querys.put("phone_number", phone);
+        querys.put("template_id", templateId);
         Map<String, String> bodys = new HashMap<String, String>();
 
 
