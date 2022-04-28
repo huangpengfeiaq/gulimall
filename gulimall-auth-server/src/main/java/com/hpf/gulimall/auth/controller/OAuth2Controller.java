@@ -27,6 +27,9 @@ public class OAuth2Controller {
     @Autowired
     private MemberFeignClient memberFeignService;
 
+    /**
+     * 微博登录成功回调
+     */
     @GetMapping(value = "/oauth2.0/weibo/success")
     public String weibo(@RequestParam("code") String code, HttpSession session) throws Exception {
 
