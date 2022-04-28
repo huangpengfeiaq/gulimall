@@ -57,6 +57,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
 
         memberEntity.setNickname(vo.getUserName());
         memberEntity.setUsername(vo.getUserName());
+
         //密码进行MD5加密
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String encode = bCryptPasswordEncoder.encode(vo.getPassword());
