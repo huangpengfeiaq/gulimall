@@ -106,6 +106,6 @@ public class MemberEntity implements Serializable {
 	/**
 	 * 社交登录过期时间
 	 */
-	private long expiresIn;
+	private Long expiresIn;
 
 }

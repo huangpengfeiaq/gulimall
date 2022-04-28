@@ -68,22 +68,23 @@ public class MemberController {
 
         MemberEntity memberEntity = memberService.login(socialUser);
 
-        if (memberEntity != null) {
-            return R.ok().setData(memberEntity);
-        } else {
+        if (memberEntity == null) {
             return R.error(BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getCode(), BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getMessage());
         }
+
+        return R.ok().setData(memberEntity);
     }
 
     @PostMapping(value = "/weixin/login")
     public R weixinLogin(@RequestParam("accessTokenInfo") String accessTokenInfo) {
 
         MemberEntity memberEntity = memberService.login(accessTokenInfo);
-        if (memberEntity != null) {
-            return R.ok().setData(memberEntity);
-        } else {
+
+        if (memberEntity == null) {
             return R.error(BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getCode(), BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getMessage());
         }
+
+        return R.ok().setData(memberEntity);
     }
 
     @RequestMapping("/coupons")
