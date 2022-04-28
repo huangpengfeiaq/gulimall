@@ -61,6 +61,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String encode = bCryptPasswordEncoder.encode(vo.getPassword());
         memberEntity.setPassword(encode);
+
+        //设置其它的默认信息
         memberEntity.setMobile(vo.getPhone());
         memberEntity.setGender(0);
         memberEntity.setCreateTime(new Date());
