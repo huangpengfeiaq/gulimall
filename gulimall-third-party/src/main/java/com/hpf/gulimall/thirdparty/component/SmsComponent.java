@@ -1,6 +1,6 @@
 package com.hpf.gulimall.thirdparty.component;
 
-import com.hpf.gulimall.thirdparty.util.HttpUtils;
+import com.hpf.common.utils.HttpUtils;
 import lombok.Data;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;

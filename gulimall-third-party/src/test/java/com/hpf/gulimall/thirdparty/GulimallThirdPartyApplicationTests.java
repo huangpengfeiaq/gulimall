@@ -4,7 +4,7 @@ import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSException;
 import com.hpf.gulimall.thirdparty.component.SmsComponent;
-import com.hpf.gulimall.thirdparty.util.HttpUtils;
+import com.hpf.common.utils.HttpUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.Test;

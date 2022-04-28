@@ -1,4 +1,4 @@
-package com.hpf.gulimall.thirdparty.util;
+package com.hpf.common.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
