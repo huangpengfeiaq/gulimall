@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 /**
- * 核心原理
+ * 核心原理：装饰者模式
  * 1）、@EnableRedisHttpSession导入RedisHttpSessionConfiguration配置
  * 1、给容器中添加了一个组件
  * RedisOperationsSessionRepository：Redis操作session，session的增删改查封装类

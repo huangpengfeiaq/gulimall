@@ -55,11 +55,11 @@ public class MemberController {
 
         MemberEntity memberEntity = memberService.login(vo);
 
-        if (memberEntity != null) {
-            return R.ok().setData(memberEntity);
-        } else {
+        if (memberEntity == null) {
             return R.error(BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getCode(), BizCodeEnum.LOGINACCT_PASSWORD_EXCEPTION.getMessage());
         }
+
+        return R.ok().setData(memberEntity);
     }
 
 
