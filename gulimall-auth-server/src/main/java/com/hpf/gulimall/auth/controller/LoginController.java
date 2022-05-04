@@ -139,13 +139,13 @@ public class LoginController {
 
         //从session先取出来用户的信息，判断用户是否已经登录过了
         Object attribute = session.getAttribute(LOGIN_USER);
-        //如果用户没登录那就跳转到登录页面
-        if (attribute == null) {
-            return "login";
-        } else {
+        if (attribute != null) {
+            //如果登录过
             return "redirect:http://gulimall.com";
         }
 
+        //如果用户没登录那就跳转到登录页面
+        return "login";
     }
 
 
