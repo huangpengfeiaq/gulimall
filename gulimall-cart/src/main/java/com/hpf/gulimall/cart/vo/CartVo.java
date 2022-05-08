@@ -6,7 +6,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * 整个购物车存放的商品信息   需要计算的属性需要重写get方法，保证每次获取属性都会进行计算
+ * 整个购物车存放的商品信息
+ * 需要计算的属性需要重写get方法，保证每次获取属性都会进行计算
  **/
 public class CartVo {
     /**
