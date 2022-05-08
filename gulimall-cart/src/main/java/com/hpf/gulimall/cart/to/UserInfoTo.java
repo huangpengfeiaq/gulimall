@@ -2,13 +2,6 @@ package com.hpf.gulimall.cart.to;
 
 import lombok.Data;
 
-/**
- * @Description:
- * @Created: with IntelliJ IDEA.
- * @author: 夏沫止水
- * @createTime: 2020-06-30 17:35
- **/
-
 @Data
 public class UserInfoTo {
 

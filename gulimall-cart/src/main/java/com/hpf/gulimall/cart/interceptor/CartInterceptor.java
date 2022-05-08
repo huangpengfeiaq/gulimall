@@ -17,15 +17,13 @@ import static com.hpf.common.constant.CartConstant.TEMP_USER_COOKIE_NAME;
 import static com.hpf.common.constant.CartConstant.TEMP_USER_COOKIE_TIMEOUT;
 
 /**
- * @Description: 在执行目标方法之前，判断用户的登录状态.并封装传递给controller目标请求
- * @Created: with IntelliJ IDEA.
- * @author: 夏沫止水
- * @createTime: 2020-06-30 17:31
+ * 在执行目标方法之前，判断用户的登录状态.并封装传递给controller目标请求
  **/
-
 public class CartInterceptor implements HandlerInterceptor {
-
-
+    /**
+     * ThreadLocal<T>相当于Map<Thread,T>，
+     * 每个线程独享一份entry
+     */
     public static ThreadLocal<UserInfoTo> toThreadLocal = new ThreadLocal<>();
 
     /***
@@ -49,8 +47,7 @@ public class CartInterceptor implements HandlerInterceptor {
         if (cookies != null && cookies.length > 0) {
             for (Cookie cookie : cookies) {
                 //user-key
-                String name = cookie.getName();
-                if (name.equals(TEMP_USER_COOKIE_NAME)) {
+                if (cookie.getName().equals(TEMP_USER_COOKIE_NAME)) {
                     userInfoTo.setUserKey(cookie.getValue());
                     //标记为已是临时用户
                     userInfoTo.setTempUser(true);
@@ -60,15 +57,13 @@ public class CartInterceptor implements HandlerInterceptor {
 
         //如果没有临时用户一定分配一个临时用户
         if (StringUtils.isEmpty(userInfoTo.getUserKey())) {
-            String uuid = UUID.randomUUID().toString();
-            userInfoTo.setUserKey(uuid);
+            userInfoTo.setUserKey(UUID.randomUUID().toString());
         }
 
         //目标方法执行之前
         toThreadLocal.set(userInfoTo);
         return true;
     }
-
 
     /**
      * 业务执行之后，分配临时用户来浏览器保存

@@ -1,15 +1,9 @@
-package com.hpf.gulimall.cart.interceptor;
+package com.hpf.gulimall.cart.config;
 
+import com.hpf.gulimall.cart.interceptor.CartInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-/**
- * @Description:
- * @Created: with IntelliJ IDEA.
- * @author: 夏沫止水
- * @createTime: 2020-06-30 17:57
- **/
 
 @Configuration
 public class GulimallWebConfig implements WebMvcConfigurer {
