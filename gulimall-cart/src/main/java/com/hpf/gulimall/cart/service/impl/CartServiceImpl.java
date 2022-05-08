@@ -28,23 +28,13 @@ import java.util.stream.Collectors;
 
 import static com.hpf.common.constant.CartConstant.CART_PREFIX;
 
-/**
- * @Description:
- * @Created: with IntelliJ IDEA.
- * @author: 夏沫止水
- * @createTime: 2020-06-30 17:06
- **/
-
 @Slf4j
 @Service("cartService")
 public class CartServiceImpl implements CartService {
-
     @Autowired
     private StringRedisTemplate redisTemplate;
-
     @Autowired
     private ProductFeignClient productFeignService;
-
     @Autowired
     private ThreadPoolExecutor executor;
 
@@ -114,9 +104,6 @@ public class CartServiceImpl implements CartService {
 
     /**
      * 获取用户登录或者未登录购物车里所有的数据
-     * @return
-     * @throws ExecutionException
-     * @throws InterruptedException
      */
     @Override
     public CartVo getCart() throws ExecutionException, InterruptedException {
@@ -157,7 +144,6 @@ public class CartServiceImpl implements CartService {
 
     /**
      * 获取到我们要操作的购物车
-     * @return
      */
     private BoundHashOperations<String, Object, Object> getCartOps() {
         //先得到当前用户信息
@@ -180,8 +166,6 @@ public class CartServiceImpl implements CartService {
 
     /**
      * 获取购物车里面的数据
-     * @param cartKey
-     * @return
      */
     private List<CartItemVo> getCartItems(String cartKey) {
         //获取购物车里面的所有商品
@@ -211,7 +195,7 @@ public class CartServiceImpl implements CartService {
         //查询购物车里面的商品
         CartItemVo cartItem = getCartItem(skuId);
         //修改商品状态
-        cartItem.setCheck(check == 1?true:false);
+        cartItem.setCheck(check == 1);
 
         //序列化存入redis中
         String redisValue = JSON.toJSONString(cartItem);
@@ -223,8 +207,6 @@ public class CartServiceImpl implements CartService {
 
     /**
      * 修改购物项数量
-     * @param skuId
-     * @param num
      */
     @Override
     public void changeItemCount(Long skuId, Integer num) {
@@ -242,7 +224,6 @@ public class CartServiceImpl implements CartService {
 
     /**
      * 删除购物项
-     * @param skuId
      */
     @Override
     public void deleteIdCartInfo(Integer skuId) {
@@ -270,7 +251,7 @@ public class CartServiceImpl implements CartService {
             }
             //筛选出选中的
             cartItemVoList = cartItems.stream()
-                    .filter(items -> items.getCheck())
+                    .filter(CartItemVo::getCheck)
                     .map(item -> {
                         //更新为最新的价格（查询数据库）
                         BigDecimal price = productFeignService.getPrice(item.getSkuId());
