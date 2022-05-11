@@ -19,6 +19,7 @@ import com.hpf.gulimall.order.service.OrderItemService;
 
 
 @Service("orderItemService")
+//@RabbitListener(queues = {"hello-java-queue"})//queues 声明需要监听的所有队列
 public class OrderItemServiceImpl extends ServiceImpl<OrderItemDao, OrderItemEntity> implements OrderItemService {
 
     @Override
@@ -31,19 +32,39 @@ public class OrderItemServiceImpl extends ServiceImpl<OrderItemDao, OrderItemEnt
         return new PageUtils(page);
     }
 
-    /**
-     * queues：声明需要监听的队列
-     * channel：当前传输数据的通道
-     */
-    @RabbitListener(queues = {"hello-java-queue"})
-    public void receiveMessage(Message message,
-                               OrderReturnReasonEntity content) {
-        //拿到主体内容
-        byte[] body = message.getBody();
-        //拿到的消息头属性信息
-        MessageProperties messageProperties = message.getMessageProperties();
-        System.out.println("接受到的消息...内容" + message + "===内容：" + content);
-
-    }
+//    /**
+//     * queues：声明需要监听的队列
+//     * channel：当前传输数据的通道
+//     */
+//    @RabbitHandler
+//    public void receiveMessage(Message msg, OrderReturnReasonEntity content, Channel channel){
+//        //消息头
+//        MessageProperties properties = msg.getMessageProperties();
+//        //消息体
+//        byte[] body = msg.getBody();
+//        //System.out.println("接收到消息...内容:"+msg+"==>类型"+content);
+//        //System.out.println("消息头:"+properties);
+//        //System.out.println("消息体:"+body);
+//        //Channel内按顺序自增
+//        long deliveryTag = msg.getMessageProperties().getDeliveryTag();
+//        //签收消息,multiple是否批量签收消息;拒签消息,requeue=true发回服务器,服务器重新入队,false丢弃消息
+//        try {
+//            if(deliveryTag%2==0){
+//                channel.basicAck(deliveryTag,false);
+//                System.out.println("签收了消息..."+deliveryTag);
+//            }else {
+//             channel.basicNack(deliveryTag,false,false);
+//                System.out.println("拒签了消息..."+deliveryTag);
+//            }
+//        }catch (Exception e){
+//            //网络中断
+//        }
+//
+//        System.out.println("接收到消息...内容:"+content);
+//    }
+//    @RabbitHandler
+//    public void receiveMessage2(OrderEntity content){
+//        System.out.println("接收到消息...内容:"+content);
+//    }
 
 }

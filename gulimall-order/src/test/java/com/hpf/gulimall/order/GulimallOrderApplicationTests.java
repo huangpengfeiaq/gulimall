@@ -1,5 +1,6 @@
 package com.hpf.gulimall.order;
 
+import com.hpf.gulimall.order.entity.OrderEntity;
 import com.hpf.gulimall.order.entity.OrderReturnReasonEntity;
 import lombok.extern.slf4j.Slf4j;
 //import org.junit.Test;
@@ -28,19 +29,24 @@ public class GulimallOrderApplicationTests {
 
     @Test
     public void sendMessageTest() {
-        OrderReturnReasonEntity reasonEntity = new OrderReturnReasonEntity();
-        reasonEntity.setId(1L);
-        reasonEntity.setCreateTime(new Date());
-        reasonEntity.setName("reason");
-        reasonEntity.setStatus(1);
-        reasonEntity.setSort(2);
-        String msg = "Hello World";
         //1、发送消息,如果发送的消息是个对象，会使用序列化机制，将对象写出去，对象必须实现Serializable接口
 
         //2、发送的对象类型的消息，可以是一个json
-        rabbitTemplate.convertAndSend("hello-java-exchange", "hello.java",
-                reasonEntity, new CorrelationData(UUID.randomUUID().toString()));
-        log.info("消息发送完成:{}", reasonEntity);
+        for (int i = 0; i < 10; i++) {
+            if (i % 2 == 0) {
+                OrderReturnReasonEntity entity = new OrderReturnReasonEntity();
+                entity.setId(1L);
+                entity.setCreateTime(new Date());
+                entity.setName("Hello World" + i);
+                rabbitTemplate.convertAndSend("hello-java-exchange", "hello.java", entity);
+                log.info("消息发送完成{}", entity);
+            } else {
+                OrderEntity orderEntity = new OrderEntity();
+                orderEntity.setOrderSn(UUID.randomUUID().toString());
+                rabbitTemplate.convertAndSend("hello-java-exchange", "hello.java", orderEntity);
+                log.info("消息发送完成{}", orderEntity);
+            }
+        }
     }
 
     /**
@@ -56,7 +62,7 @@ public class GulimallOrderApplicationTests {
     }
 
     @Test
-    public void testCreateQueue() {
+    public void createQueue() {
         Queue queue = new Queue("hello-java-queue", true, false, false);
         amqpAdmin.declareQueue(queue);
         log.info("Queue[{}]创建成功：", "hello-java-queue");
