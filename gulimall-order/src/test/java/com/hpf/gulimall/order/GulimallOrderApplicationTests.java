@@ -38,7 +38,7 @@ public class GulimallOrderApplicationTests {
         //1、发送消息,如果发送的消息是个对象，会使用序列化机制，将对象写出去，对象必须实现Serializable接口
 
         //2、发送的对象类型的消息，可以是一个json
-        rabbitTemplate.convertAndSend("hello-java-exchange", "hello2.java",
+        rabbitTemplate.convertAndSend("hello-java-exchange", "hello.java",
                 reasonEntity, new CorrelationData(UUID.randomUUID().toString()));
         log.info("消息发送完成:{}", reasonEntity);
     }
