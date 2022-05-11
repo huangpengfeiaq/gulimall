@@ -3,6 +3,7 @@ package com.hpf.gulimall.order;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * 使用RabbitMQ
@@ -26,6 +27,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *      7、每一个远程的小事务用@Trabsactional
  */
 @EnableRabbit
+@EnableDiscoveryClient
 @SpringBootApplication
 public class GulimallOrderApplication {
 
