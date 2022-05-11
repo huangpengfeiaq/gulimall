@@ -38,12 +38,12 @@ public class GulimallOrderApplicationTests {
                 entity.setId(1L);
                 entity.setCreateTime(new Date());
                 entity.setName("Hello World" + i);
-                rabbitTemplate.convertAndSend("hello-java-exchange", "hello.java", entity);
+                rabbitTemplate.convertAndSend("hello-java-exchange", "hello.java", entity, new CorrelationData(UUID.randomUUID().toString()));
                 log.info("消息发送完成{}", entity);
             } else {
                 OrderEntity orderEntity = new OrderEntity();
                 orderEntity.setOrderSn(UUID.randomUUID().toString());
-                rabbitTemplate.convertAndSend("hello-java-exchange", "hello.java", orderEntity);
+                rabbitTemplate.convertAndSend("hello-java-exchange", "hello.java", orderEntity, new CorrelationData(UUID.randomUUID().toString()));
                 log.info("消息发送完成{}", orderEntity);
             }
         }
