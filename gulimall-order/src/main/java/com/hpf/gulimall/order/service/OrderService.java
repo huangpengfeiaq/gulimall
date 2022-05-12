@@ -56,10 +56,10 @@ public interface OrderService extends IService<OrderEntity> {
      */
     String handlePayResult(PayAsyncVo asyncVo);
 
-    /**
-     * 微信异步通知处理
-     */
-    String asyncNotify(String notifyData);
+//    /**
+//     * 微信异步通知处理
+//     */
+//    String asyncNotify(String notifyData);
 
 
     /**

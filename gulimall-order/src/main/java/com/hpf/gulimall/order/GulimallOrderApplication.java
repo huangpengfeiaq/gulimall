@@ -1,9 +1,14 @@
 package com.hpf.gulimall.order;
 
+import com.hpf.feign.client.CartFeignClient;
+import com.hpf.feign.client.MemberFeignClient;
+import com.hpf.feign.client.ProductFeignClient;
+import com.hpf.feign.client.WareFeignClient;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
@@ -29,7 +34,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  *      7、每一个远程的小事务用@Trabsactional
  */
 //@EnableAspectJAutoProxy(exposeProxy = true)     //开启了aspect动态代理模式,对外暴露代理对象
-//@EnableFeignClients
+@EnableFeignClients(clients = {MemberFeignClient.class, CartFeignClient.class, WareFeignClient.class, ProductFeignClient.class})
 @EnableRedisHttpSession     //开启springsession
 @EnableRabbit
 @EnableDiscoveryClient
