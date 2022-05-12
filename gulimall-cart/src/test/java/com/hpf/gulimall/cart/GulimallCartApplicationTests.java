@@ -1,4 +1,4 @@
-package com.xunqi.gulimall.cart;
+package com.hpf.gulimall.cart;
 
 import com.hpf.gulimall.cart.service.CartService;
 import com.hpf.gulimall.cart.vo.CartItemVo;
