@@ -1,5 +1,6 @@
-package com.hpf.gulimall.order.vo;
+package com.hpf.common.vo;
 
+import com.hpf.common.vo.OrderItemVo;
 import lombok.Data;
 
 import java.util.List;

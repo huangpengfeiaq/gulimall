@@ -1,4 +1,4 @@
-package com.hpf.gulimall.order.vo;
+package com.hpf.common.vo;
 
 import lombok.Data;
 

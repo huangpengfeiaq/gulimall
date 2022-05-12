@@ -36,4 +36,10 @@ public interface ProductFeignClient {
      */
     @GetMapping(value = "/product/skuinfo/{skuId}/price")
     BigDecimal getPrice(@PathVariable("skuId") Long skuId);
+
+    /**
+     * 根据skuId查询spu的信息
+     */
+    @GetMapping(value = "/product/spuinfo/skuId/{skuId}")
+    R getSpuInfoBySkuId(@PathVariable("skuId") Long skuId);
 }

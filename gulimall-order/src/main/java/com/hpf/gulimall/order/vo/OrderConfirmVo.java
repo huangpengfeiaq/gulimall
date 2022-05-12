@@ -1,5 +1,7 @@
 package com.hpf.gulimall.order.vo;
 
+import com.hpf.common.vo.MemberAddressVo;
+import com.hpf.common.vo.OrderItemVo;
 import lombok.Getter;
 import lombok.Setter;
 

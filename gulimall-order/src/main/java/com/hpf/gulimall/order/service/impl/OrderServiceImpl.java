@@ -1,6 +1,7 @@
 package com.hpf.gulimall.order.service.impl;
 
 import com.hpf.common.to.mq.SeckillOrderTo;
+import com.hpf.common.vo.PayVo;
 import com.hpf.gulimall.order.vo.*;
 import org.springframework.stereotype.Service;
 import java.util.Map;

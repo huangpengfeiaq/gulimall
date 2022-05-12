@@ -1,13 +1,14 @@
 package com.hpf.feign.client;
 
 import com.hpf.common.utils.R;
+import com.hpf.common.vo.MemberAddressVo;
 import com.hpf.common.vo.SocialUser;
 import com.hpf.common.vo.UserLoginVo;
 import com.hpf.common.vo.UserRegisterVo;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @FeignClient("gulimall-member")
 public interface MemberFeignClient {
@@ -22,4 +23,10 @@ public interface MemberFeignClient {
 
     @PostMapping(value = "/member/member/weixin/login")
     R weixinLogin(@RequestParam("accessTokenInfo") String accessTokenInfo);
+
+    /**
+     * 查询当前用户的全部收货地址
+     */
+    @GetMapping(value = "/member/memberreceiveaddress/{memberId}/address")
+    List<MemberAddressVo> getAddress(@PathVariable("memberId") Long memberId);
 }
