@@ -35,5 +35,4 @@ public class HelloController {
     public String listPage(@PathVariable("page") String page) {
         return page;
     }
-
 }
