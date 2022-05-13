@@ -24,10 +24,10 @@ public class OrderConfirmVo {
     List<OrderItemVo> items;
     /**
      * 发票记录
+     * 优惠券（会员积分）
      **/
     @Getter
     @Setter
-    /* 优惠券（会员积分） **/
     private Integer integration;
     /**
      * 防止重复提交的令牌
