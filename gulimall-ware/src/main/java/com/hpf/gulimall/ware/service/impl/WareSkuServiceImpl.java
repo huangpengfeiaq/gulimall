@@ -1,10 +1,9 @@
 package com.hpf.gulimall.ware.service.impl;
 
+import com.hpf.common.to.OrderTo;
 import com.hpf.common.to.SkuHasStockVo;
-import com.hpf.gulimall.ware.entity.WareInfoEntity;
-import com.hpf.gulimall.ware.entity.WareOrderTaskEntity;
-import com.hpf.gulimall.ware.vo.OrderItemVo;
-import com.hpf.gulimall.ware.vo.WareSkuLockVo;
+import com.hpf.common.to.mq.StockLockedTo;
+import com.hpf.common.vo.WareSkuLockVo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +21,6 @@ import com.hpf.gulimall.ware.entity.WareSkuEntity;
 import com.hpf.gulimall.ware.service.WareSkuService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
-import javax.annotation.Resource;
 
 
 @Service("wareSkuService")
@@ -76,6 +73,21 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             skuHasStockVo.setHasStock(count != null && count > 0);
             return skuHasStockVo;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean orderLockStock(WareSkuLockVo vo) {
+        return false;
+    }
+
+    @Override
+    public void unlockStock(StockLockedTo to) {
+
+    }
+
+    @Override
+    public void unlockStock(OrderTo orderTo) {
+
     }
 
 }
