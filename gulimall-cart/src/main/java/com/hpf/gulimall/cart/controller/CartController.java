@@ -27,9 +27,7 @@ public class CartController {
     @ResponseBody
     public List<CartItemVo> getCurrentCartItems() {
 
-        List<CartItemVo> cartItemVoList = cartService.getUserCartItems();
-
-        return cartItemVoList;
+        return cartService.getUserCartItems();
     }
 
     /**

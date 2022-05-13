@@ -90,7 +90,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     /**
      * 订单确认页返回需要用的数据
-     * @return
      */
     @Override
     public OrderConfirmVo confirmOrder() throws ExecutionException, InterruptedException {
@@ -129,7 +128,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
             List<OrderItemVo> items = confirmVo.getItems();
             //获取全部商品的id
             List<Long> skuIds = items.stream()
-                    .map((itemVo -> itemVo.getSkuId()))
+                    .map((OrderItemVo::getSkuId))
                     .collect(Collectors.toList());
 
             //远程查询商品库存信息
