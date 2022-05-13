@@ -8,27 +8,36 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+
 public class OrderConfirmVo {
-
-    @Getter @Setter
-    /* 会员收获地址列表 **/
+    /**
+     * 会员收获地址列表
+     **/
+    @Getter
+    @Setter
     List<MemberAddressVo> memberAddressVos;
-
-    @Getter @Setter
-    /* 所有选中的购物项 **/
+    /**
+     * 所有选中的购物项
+     **/
+    @Getter
+    @Setter
     List<OrderItemVo> items;
-
-    /** 发票记录 **/
-    @Getter @Setter
+    /**
+     * 发票记录
+     **/
+    @Getter
+    @Setter
     /* 优惠券（会员积分） **/
     private Integer integration;
-
-    /** 防止重复提交的令牌 **/
-    @Getter @Setter
+    /**
+     * 防止重复提交的令牌
+     **/
+    @Getter
+    @Setter
     private String orderToken;
-
-    @Getter @Setter
-    Map<Long,Boolean> stocks;
+    @Getter
+    @Setter
+    Map<Long, Boolean> stocks;
 
     public Integer getCount() {
         Integer count = 0;
@@ -40,8 +49,9 @@ public class OrderConfirmVo {
         return count;
     }
 
-
-    /** 订单总额 **/
+    /**
+     * 订单总额
+     **/
     //BigDecimal total;
     //计算订单总额
     public BigDecimal getTotal() {
@@ -57,8 +67,9 @@ public class OrderConfirmVo {
         return totalNum;
     }
 
-
-    /** 应付价格 **/
+    /**
+     * 应付价格
+     **/
     //BigDecimal payPrice;
     public BigDecimal getPayPrice() {
         return getTotal();
