@@ -143,7 +143,7 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             Long skuId = hasStock.getSkuId();
             List<Long> wareIds = hasStock.getWareId();
 
-            if (org.springframework.util.StringUtils.isEmpty(wareIds)) {
+            if (StringUtils.isEmpty(wareIds)) {
                 //没有任何仓库有这个商品的库存
                 throw new NoStockException(skuId);
             }
