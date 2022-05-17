@@ -39,7 +39,7 @@
           AND ware_id = #{wareId}
           AND stock - IFNULL(stock_locked, 0) >= #{num}
     </update>
-    <update id="unlockStock">
+    <update id="unLockStock">
         UPDATE gulimall_wms.`wms_ware_sku`
         SET stock_locked = IFNULL(stock_locked, 0) - #{num}
         WHERE sku_id = #{skuId}

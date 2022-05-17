@@ -40,7 +40,6 @@ public class WareSkuController {
      */
     @PostMapping(value = "/lock/order")
     public R orderLockStock(@RequestBody WareSkuLockVo vo) {
-
         try {
             boolean lockStock = wareSkuService.orderLockStock(vo);
             return R.ok().setData(lockStock);
