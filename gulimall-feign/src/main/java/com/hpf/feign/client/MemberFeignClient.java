@@ -29,4 +29,10 @@ public interface MemberFeignClient {
      */
     @GetMapping(value = "/member/memberreceiveaddress/{memberId}/address")
     List<MemberAddressVo> getAddress(@PathVariable("memberId") Long memberId);
+
+    /**
+     * 根据id获取用户地址信息
+     */
+    @RequestMapping("/member/memberreceiveaddress/info/{id}")
+    R info(@PathVariable("id") Long id);
 }
