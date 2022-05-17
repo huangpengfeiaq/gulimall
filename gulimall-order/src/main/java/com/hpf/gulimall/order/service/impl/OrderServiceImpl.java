@@ -291,7 +291,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         }
     }
 
-
     /**
      * 获取当前订单的支付信息
      */
@@ -347,8 +346,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     /**
      * 保存订单所有数据
-     *
-     * @param orderCreateTo
      */
     private void saveOrder(OrderCreateTo orderCreateTo) {
 
@@ -364,7 +361,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         //批量保存订单项数据
         orderItemService.saveBatch(orderItems);
     }
-
 
     private OrderCreateTo createOrder() {
 
