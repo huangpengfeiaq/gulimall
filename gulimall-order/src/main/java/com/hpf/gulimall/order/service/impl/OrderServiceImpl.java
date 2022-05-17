@@ -73,7 +73,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
     private RabbitTemplate rabbitTemplate;
     @Autowired
     private PaymentInfoService paymentInfoService;
-//    @Autowired
+    //    @Autowired
 //    private BestPayService bestPayService;
     @Autowired
     private ThreadPoolExecutor threadPoolExecutor;
@@ -133,14 +133,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
             //远程查询商品库存信息
             R skuHasStock = wmsFeignService.getSkuHasStock(skuIds);
-            List<SkuStockVo> skuStockVos = skuHasStock.getKey("data", new TypeReference<List<SkuStockVo>>() {});
+            List<SkuStockVo> skuStockVos = skuHasStock.getKey("data", new TypeReference<List<SkuStockVo>>() {
+            });
 
             if (skuStockVos != null && skuStockVos.size() > 0) {
                 //将skuStockVos集合转换为map
                 Map<Long, Boolean> skuHasStockMap = skuStockVos.stream().collect(Collectors.toMap(SkuStockVo::getSkuId, SkuStockVo::getHasStock));
                 confirmVo.setStocks(skuHasStockMap);
             }
-        },threadPoolExecutor);
+        }, threadPoolExecutor);
 
         //3、查询用户积分
         Integer integration = memberResponseVo.getIntegration();
@@ -151,11 +152,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         //TODO 5、防重令牌(防止表单重复提交)
         //为用户设置一个token，三十分钟过期时间（存在redis）
         String token = UUID.randomUUID().toString().replace("-", "");
-        redisTemplate.opsForValue().set(USER_ORDER_TOKEN_PREFIX+memberResponseVo.getId(),token,30, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(USER_ORDER_TOKEN_PREFIX + memberResponseVo.getId(), token, 30, TimeUnit.MINUTES);
         confirmVo.setOrderToken(token);
 
 
-        CompletableFuture.allOf(addressFuture,cartInfoFuture).get();
+        CompletableFuture.allOf(addressFuture, cartInfoFuture).get();
 
         return confirmVo;
     }
@@ -192,63 +193,63 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
             //令牌验证失败
             responseVo.setCode(1);
             return responseVo;
-        } else {
-            //令牌验证成功
-            //1、创建订单、订单项等信息
-            OrderCreateTo order = createOrder();
-
-            //2、验证价格
-            BigDecimal payAmount = order.getOrder().getPayAmount();
-            BigDecimal payPrice = vo.getPayPrice();
-
-            if (Math.abs(payAmount.subtract(payPrice).doubleValue()) < 0.01) {
-                //金额对比
-                //TODO 3、保存订单
-                saveOrder(order);
-
-                //4、库存锁定,只要有异常，回滚订单数据
-                //订单号、所有订单项信息(skuId,skuNum,skuName)
-                WareSkuLockVo lockVo = new WareSkuLockVo();
-                lockVo.setOrderSn(order.getOrder().getOrderSn());
-
-                //获取出要锁定的商品数据信息
-                List<OrderItemVo> orderItemVos = order.getOrderItems().stream().map((item) -> {
-                    OrderItemVo orderItemVo = new OrderItemVo();
-                    orderItemVo.setSkuId(item.getSkuId());
-                    orderItemVo.setCount(item.getSkuQuantity());
-                    orderItemVo.setTitle(item.getSkuName());
-                    return orderItemVo;
-                }).collect(Collectors.toList());
-                lockVo.setLocks(orderItemVos);
-
-                //TODO 调用远程锁定库存的方法
-                //出现的问题：扣减库存成功了，但是由于网络原因超时，出现异常，导致订单事务回滚，库存事务不回滚(解决方案：seata)
-                //为了保证高并发，不推荐使用seata，因为是加锁，并行化，提升不了效率,可以发消息给库存服务
-                R r = wmsFeignService.orderLockStock(lockVo);
-                if (r.getCode() == 0) {
-                    //锁定成功
-                    responseVo.setOrder(order.getOrder());
-                    // int i = 10/0;
-
-                    //TODO 订单创建成功，发送消息给MQ
-                    rabbitTemplate.convertAndSend("order-event-exchange","order.create.order",order.getOrder());
-
-                    //删除购物车里的数据
-                    redisTemplate.delete(CART_PREFIX+memberResponseVo.getId());
-                    return responseVo;
-                } else {
-                    //锁定失败
-                    String msg = (String) r.get("msg");
-                    throw new NoStockException(msg);
-                    // responseVo.setCode(3);
-                    // return responseVo;
-                }
-
-            } else {
-                responseVo.setCode(2);
-                return responseVo;
-            }
         }
+        //令牌验证成功
+        //1、创建订单、订单项等信息
+        OrderCreateTo order = createOrder();
+
+        //2、验证价格
+        BigDecimal payAmount = order.getOrder().getPayAmount();
+        BigDecimal payPrice = vo.getPayPrice();
+
+        if (Math.abs(payAmount.subtract(payPrice).doubleValue()) < 0.01) {
+            //金额对比
+            //TODO 3、保存订单
+            saveOrder(order);
+
+            //4、库存锁定,只要有异常，回滚订单数据
+            //订单号、所有订单项信息(skuId,skuNum,skuName)
+            WareSkuLockVo lockVo = new WareSkuLockVo();
+            lockVo.setOrderSn(order.getOrder().getOrderSn());
+
+            //获取出要锁定的商品数据信息
+            List<OrderItemVo> orderItemVos = order.getOrderItems().stream().map((item) -> {
+                OrderItemVo orderItemVo = new OrderItemVo();
+                orderItemVo.setSkuId(item.getSkuId());
+                orderItemVo.setCount(item.getSkuQuantity());
+                orderItemVo.setTitle(item.getSkuName());
+                return orderItemVo;
+            }).collect(Collectors.toList());
+            lockVo.setLocks(orderItemVos);
+
+            //TODO 调用远程锁定库存的方法
+            //出现的问题：扣减库存成功了，但是由于网络原因超时，出现异常，导致订单事务回滚，库存事务不回滚(解决方案：seata)
+            //为了保证高并发，不推荐使用seata，因为是加锁，并行化，提升不了效率,可以发消息给库存服务
+            R r = wmsFeignService.orderLockStock(lockVo);
+            if (r.getCode() == 0) {
+                //锁定成功
+                responseVo.setOrder(order.getOrder());
+                // int i = 10/0;
+
+                //TODO 订单创建成功，发送消息给MQ
+                rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", order.getOrder());
+
+                //删除购物车里的数据
+                redisTemplate.delete(CART_PREFIX + memberResponseVo.getId());
+                return responseVo;
+            } else {
+                //锁定失败
+                String msg = (String) r.get("msg");
+                throw new NoStockException(msg);
+                // responseVo.setCode(3);
+                // return responseVo;
+            }
+
+        } else {
+            responseVo.setCode(2);
+            return responseVo;
+        }
+
     }
 
     /**
@@ -268,7 +269,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
         //关闭订单之前先查询一下数据库，判断此订单状态是否已支付
         OrderEntity orderInfo = this.getOne(new QueryWrapper<OrderEntity>().
-                eq("order_sn",orderEntity.getOrderSn()));
+                eq("order_sn", orderEntity.getOrderSn()));
 
         if (orderInfo.getStatus().equals(OrderStatusEnum.CREATE_NEW.getCode())) {
             //代付款状态进行关单
@@ -327,7 +328,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         IPage<OrderEntity> page = this.page(
                 new Query<OrderEntity>().getPage(params),
                 new QueryWrapper<OrderEntity>()
-                        .eq("member_id",memberResponseVo.getId()).orderByDesc("create_time")
+                        .eq("member_id", memberResponseVo.getId()).orderByDesc("create_time")
         );
 
         //遍历所有订单集合
@@ -346,6 +347,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     /**
      * 保存订单所有数据
+     *
      * @param orderCreateTo
      */
     private void saveOrder(OrderCreateTo orderCreateTo) {
@@ -376,7 +378,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         List<OrderItemEntity> orderItemEntities = builderOrderItems(orderSn);
 
         //3、验价(计算价格、积分等信息)
-        computePrice(orderEntity,orderItemEntities);
+        computePrice(orderEntity, orderItemEntities);
 
         createTo.setOrder(orderEntity);
         createTo.setOrderItems(orderItemEntities);
@@ -450,7 +452,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
         //远程获取收货地址和运费信息
         R fareAddressVo = wmsFeignService.getFare(orderSubmitVo.getAddrId());
-        FareVo fareResp = fareAddressVo.getKey("data", new TypeReference<FareVo>() {});
+        FareVo fareResp = fareAddressVo.getKey("data", new TypeReference<FareVo>() {
+        });
 
         //获取到运费信息
         BigDecimal fare = fareResp.getFare();
@@ -575,7 +578,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         if (tradeStatus.equals("TRADE_SUCCESS") || tradeStatus.equals("TRADE_FINISHED")) {
             //支付成功状态
             String orderSn = asyncVo.getOut_trade_no(); //获取订单号
-            this.updateOrderStatus(orderSn,OrderStatusEnum.PAYED.getCode(),PayConstant.ALIPAY);
+            this.updateOrderStatus(orderSn, OrderStatusEnum.PAYED.getCode(), PayConstant.ALIPAY);
         }
 
         return "success";
@@ -585,9 +588,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
     /**
      * 修改订单状态
      */
-    private void updateOrderStatus(String orderSn, Integer code,Integer payType) {
+    private void updateOrderStatus(String orderSn, Integer code, Integer payType) {
 
-        baseMapper.updateOrderStatus(orderSn,code,payType);
+        baseMapper.updateOrderStatus(orderSn, code, payType);
     }
 
 //    /**
@@ -675,7 +678,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
 
     public static void main(String[] args) {
-        String orderSn = IdWorker.getTimeId().substring(0,16);
+        String orderSn = IdWorker.getTimeId().substring(0, 16);
         System.out.println(orderSn);
     }
 
