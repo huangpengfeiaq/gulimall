@@ -430,7 +430,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     }
 
-
     /**
      * 构建订单数据
      */
@@ -547,7 +546,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         return orderItemEntity;
     }
 
-
     /**
      * 处理支付宝的支付结果
      */
@@ -579,7 +577,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
         return "success";
     }
-
 
     /**
      * 修改订单状态
@@ -633,7 +630,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 //                "</xml>";
 //    }
 
-
     /**
      * 创建秒杀单
      */
@@ -671,7 +667,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         //保存订单项数据
         orderItemService.save(orderItem);
     }
-
 
     public static void main(String[] args) {
         String orderSn = IdWorker.getTimeId().substring(0, 16);
