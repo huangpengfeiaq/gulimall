@@ -9,18 +9,9 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @Description: 线程池配置类
- * @Created: with IntelliJ IDEA.
- * @author: 夏沫止水
- * @createTime: 2020-06-23 20:24
- **/
-
 @EnableConfigurationProperties(ThreadPoolConfigProperties.class)
 @Configuration
 public class MyThreadConfig {
-
-
     @Bean
     public ThreadPoolExecutor threadPoolExecutor(ThreadPoolConfigProperties pool) {
         return new ThreadPoolExecutor(
