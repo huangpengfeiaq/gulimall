@@ -202,53 +202,53 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         BigDecimal payAmount = order.getOrder().getPayAmount();
         BigDecimal payPrice = vo.getPayPrice();
 
-        if (Math.abs(payAmount.subtract(payPrice).doubleValue()) < 0.01) {
-            //金额对比
-            //TODO 3、保存订单
-            saveOrder(order);
-
-            //4、库存锁定,只要有异常，回滚订单数据
-            //订单号、所有订单项信息(skuId,skuNum,skuName)
-            WareSkuLockVo lockVo = new WareSkuLockVo();
-            lockVo.setOrderSn(order.getOrder().getOrderSn());
-
-            //获取出要锁定的商品数据信息
-            List<OrderItemVo> orderItemVos = order.getOrderItems().stream().map((item) -> {
-                OrderItemVo orderItemVo = new OrderItemVo();
-                orderItemVo.setSkuId(item.getSkuId());
-                orderItemVo.setCount(item.getSkuQuantity());
-                orderItemVo.setTitle(item.getSkuName());
-                return orderItemVo;
-            }).collect(Collectors.toList());
-            lockVo.setLocks(orderItemVos);
-
-            //TODO 调用远程锁定库存的方法
-            //出现的问题：扣减库存成功了，但是由于网络原因超时，出现异常，导致订单事务回滚，库存事务不回滚(解决方案：seata)
-            //为了保证高并发，不推荐使用seata，因为是加锁，并行化，提升不了效率,可以发消息给库存服务
-            R r = wmsFeignService.orderLockStock(lockVo);
-            if (r.getCode() == 0) {
-                //锁定成功
-                responseVo.setOrder(order.getOrder());
-                // int i = 10/0;
-
-                //TODO 订单创建成功，发送消息给MQ
-                rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", order.getOrder());
-
-                //删除购物车里的数据
-                redisTemplate.delete(CART_PREFIX + memberResponseVo.getId());
-                return responseVo;
-            } else {
-                //锁定失败
-                String msg = (String) r.get("msg");
-                throw new NoStockException(msg);
-                // responseVo.setCode(3);
-                // return responseVo;
-            }
-
-        } else {
+        if (Math.abs(payAmount.subtract(payPrice).doubleValue()) >= 0.01) {
+            //金额对比失败
             responseVo.setCode(2);
             return responseVo;
         }
+
+        //TODO 3、保存订单
+        saveOrder(order);
+
+        //4、库存锁定,只要有异常，回滚订单数据
+        //订单号、所有订单项信息(skuId,skuNum,skuName)
+        WareSkuLockVo lockVo = new WareSkuLockVo();
+        lockVo.setOrderSn(order.getOrder().getOrderSn());
+
+        //获取出要锁定的商品数据信息
+        List<OrderItemVo> orderItemVos = order.getOrderItems().stream().map((item) -> {
+            OrderItemVo orderItemVo = new OrderItemVo();
+            orderItemVo.setSkuId(item.getSkuId());
+            orderItemVo.setCount(item.getSkuQuantity());
+            orderItemVo.setTitle(item.getSkuName());
+            return orderItemVo;
+        }).collect(Collectors.toList());
+        lockVo.setLocks(orderItemVos);
+
+        //TODO 调用远程锁定库存的方法
+        //出现的问题：扣减库存成功了，但是由于网络原因超时，出现异常，导致订单事务回滚，库存事务不回滚(解决方案：seata)
+        //为了保证高并发，不推荐使用seata，因为是加锁，并行化，提升不了效率,可以发消息给库存服务
+        R r = wmsFeignService.orderLockStock(lockVo);
+        if (r.getCode() == 0) {
+            //锁定成功
+            responseVo.setOrder(order.getOrder());
+            // int i = 10/0;
+
+            //TODO 订单创建成功，发送消息给MQ
+            rabbitTemplate.convertAndSend("order-event-exchange", "order.create.order", order.getOrder());
+
+            //删除购物车里的数据
+            redisTemplate.delete(CART_PREFIX + memberResponseVo.getId());
+            return responseVo;
+        } else {
+            //锁定失败
+            String msg = (String) r.get("msg");
+            throw new NoStockException(msg);
+            // responseVo.setCode(3);
+            // return responseVo;
+        }
+
 
     }
 
