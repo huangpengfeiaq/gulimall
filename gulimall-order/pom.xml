@@ -14,6 +14,12 @@
     <dependencies>
 
 
+        <!-- 引入aop -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
         <!-- 引入redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
