@@ -29,6 +29,32 @@ spring:
   session:
     store-type: redis
 
+#seata:
+#  enabled: true # 1.0新特性，需要依赖seata-spring-boot-starter 默认为true
+#  enable-auto-data-source-proxy: true  # 牵扯到回滚
+#  tx-service-group: my_test_tx_group  # 需要与config.txt中的 service.vgroupMapping.seata_test_group=default保持一致
+#  registry:
+#    type: nacos
+#    nacos:
+#      application: seata-server
+#      server-addr: 127.0.0.1:8848
+#      username: nacos
+#      password: nacos
+#  config:
+#    type: nacos
+#    nacos:
+#      server-addr: 127.0.0.1:8848
+#      group: SEATA_GROUP
+#      username: nacos
+#      password: nacos
+#      namespace: seata
+#  service:
+#    vgroup-mapping:
+#      my_test_tx_group: default # 需要与config.txt中的 service.vgroupMapping.seata_test_group=default 保持一致
+#    disable-global-transaction: false
+#  client:
+#    rm:
+#      report-success-enable: false
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
