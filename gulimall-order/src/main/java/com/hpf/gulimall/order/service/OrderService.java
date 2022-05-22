@@ -3,7 +3,6 @@ package com.hpf.gulimall.order.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hpf.common.to.mq.SeckillOrderTo;
 import com.hpf.common.utils.PageUtils;
-import com.hpf.common.vo.PayVo;
 import com.hpf.gulimall.order.entity.OrderEntity;
 import com.hpf.gulimall.order.vo.*;
 

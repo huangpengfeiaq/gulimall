@@ -21,6 +21,7 @@ import com.hpf.gulimall.order.service.PaymentInfoService;
 import com.hpf.gulimall.order.to.OrderCreateTo;
 import com.hpf.gulimall.order.to.SpuInfoVo;
 import com.hpf.gulimall.order.vo.*;
+import com.hpf.gulimall.order.vo.PayVo;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -297,7 +299,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         OrderEntity orderInfo = this.getOrderByOrderSn(orderSn);
 
         //保留两位小数点，向上取值
-        BigDecimal payAmount = orderInfo.getPayAmount().setScale(2, BigDecimal.ROUND_UP);
+        BigDecimal payAmount = orderInfo.getPayAmount().setScale(2, RoundingMode.UP);
         payVo.setTotal_amount(payAmount.toString());
         payVo.setOut_trade_no(orderInfo.getOrderSn());
 
