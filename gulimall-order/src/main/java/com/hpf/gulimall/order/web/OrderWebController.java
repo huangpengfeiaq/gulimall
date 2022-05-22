@@ -43,8 +43,9 @@ public class OrderWebController {
     @PostMapping(value = "/submitOrder")
     public String submitOrder(OrderSubmitVo vo, Model model, RedirectAttributes attributes) {
         try {
+            //TODO 支付方式未获取
             vo.setPayType(1);
-//            vo.setPayPrice(new BigDecimal(5799.00));
+
             SubmitOrderResponseVo responseVo = orderService.submitOrder(vo);
             //下单成功来到支付选择页
             //下单失败回到订单确认页重新确定订单信息
