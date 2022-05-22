@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.concurrent.ExecutionException;
 
 @Controller
@@ -41,8 +42,9 @@ public class OrderWebController {
      */
     @PostMapping(value = "/submitOrder")
     public String submitOrder(OrderSubmitVo vo, Model model, RedirectAttributes attributes) {
-
         try {
+            vo.setPayType(1);
+//            vo.setPayPrice(new BigDecimal(5799.00));
             SubmitOrderResponseVo responseVo = orderService.submitOrder(vo);
             //下单成功来到支付选择页
             //下单失败回到订单确认页重新确定订单信息

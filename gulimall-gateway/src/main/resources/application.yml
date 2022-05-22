@@ -80,6 +80,7 @@ spring:
           '[/**]':
             allowedOrigins: # 允许哪些网站的跨域请求
               - "http://localhost:8001"
+              - "http://order.gulimall.com"
             allowedMethods: # 允许的跨域ajax的请求方式
               - "GET"
               - "POST"
