@@ -28,6 +28,10 @@ spring:
     port: 6379
   session:
     store-type: redis
+  mvc:
+    format:
+      date: yyyy-MM-dd HH:mm:ss
+#      date-time: yyyy-MM-dd HH:mm:ss
 
 #seata:
 #  enabled: true # 1.0新特性，需要依赖seata-spring-boot-starter 默认为true
