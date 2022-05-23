@@ -23,7 +23,7 @@ spring:
             - Path=/api/product/**,/hello
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
-
+        # 优惠券服务
         - id: coupon_route
           uri: lb://gulimall-coupon
           predicates:
