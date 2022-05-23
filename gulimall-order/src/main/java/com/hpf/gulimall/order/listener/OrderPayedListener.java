@@ -20,10 +20,8 @@ import java.util.Map;
  **/
 @RestController
 public class OrderPayedListener {
-
     @Autowired
     private OrderService orderService;
-
     @Autowired
     private AlipayTemplate alipayTemplate;
 
@@ -38,8 +36,7 @@ public class OrderPayedListener {
             String[] values = requestParams.get(name);
             String valueStr = "";
             for (int i = 0; i < values.length; i++) {
-                valueStr = (i == values.length - 1) ? valueStr + values[i]
-                        : valueStr + values[i] + ",";
+                valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
             }
             //乱码解决，这段代码在出现乱码时使用
             // valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
@@ -52,8 +49,7 @@ public class OrderPayedListener {
         if (signVerified) {
             System.out.println("签名验证成功...");
             //去修改订单状态
-            String result = orderService.handlePayResult(asyncVo);
-            return result;
+            return orderService.handlePayResult(asyncVo);
         } else {
             System.out.println("签名验证失败...");
             return "error";
