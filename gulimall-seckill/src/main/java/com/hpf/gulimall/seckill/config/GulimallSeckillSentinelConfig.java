@@ -1,4 +1,4 @@
-//package com.hpf.gulimall.member.config;
+//package com.hpf.gulimall.seckill.config;
 //
 //import com.alibaba.csp.sentinel.adapter.servlet.callback.UrlBlockHandler;
 //import com.alibaba.csp.sentinel.adapter.servlet.callback.WebCallbackManager;
@@ -12,10 +12,14 @@
 //import javax.servlet.http.HttpServletResponse;
 //import java.io.IOException;
 //
-//@Configuration
-//public class GulimallMemberSentinelConfig {
+///**
+// * 自定义阻塞返回方法
+// **/
 //
-//    public GulimallMemberSentinelConfig() {
+//@Configuration
+//public class GulimallSeckillSentinelConfig {
+//
+//    public GulimallSeckillSentinelConfig() {
 //
 //        WebCallbackManager.setUrlBlockHandler(new UrlBlockHandler() {
 //            @Override

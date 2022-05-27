@@ -12,7 +12,6 @@ import java.util.List;
 
 @FeignClient("gulimall-product")
 public interface ProductFeignClient {
-
     @GetMapping("/product/attr/info/{attrId}")
     R attrInfo(@PathVariable("attrId") Long attrId);
 
@@ -42,4 +41,7 @@ public interface ProductFeignClient {
      */
     @GetMapping(value = "/product/spuinfo/skuId/{skuId}")
     R getSpuInfoBySkuId(@PathVariable("skuId") Long skuId);
+
+    @RequestMapping("/product/skuinfo/info/{skuId}")
+    R getSkuInfo(@PathVariable("skuId") Long skuId);
 }

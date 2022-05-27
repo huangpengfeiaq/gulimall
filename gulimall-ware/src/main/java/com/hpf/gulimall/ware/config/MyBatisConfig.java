@@ -8,7 +8,7 @@
 //
 //@Configuration
 //@EnableTransactionManagement        //开启事务
-//@MapperScan("com.xunqi.gulimall.ware.dao")
+//@MapperScan("com.hpf.gulimall.ware.dao")
 //public class MyBatisConfig {
 //
 //    //引入分页插件
