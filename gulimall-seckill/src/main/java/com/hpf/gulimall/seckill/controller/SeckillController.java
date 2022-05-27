@@ -15,8 +15,6 @@ import java.util.List;
 
 @Controller
 public class SeckillController {
-
-
     @Autowired
     private SeckillService seckillService;
 
@@ -33,7 +31,6 @@ public class SeckillController {
         return R.ok().setData(vos);
     }
 
-
     /**
      * 根据skuId查询商品是否参加秒杀活动
      */
@@ -45,7 +42,6 @@ public class SeckillController {
 
         return R.ok().setData(to);
     }
-
 
     /**
      * 商品进行秒杀(秒杀开始)
@@ -59,8 +55,8 @@ public class SeckillController {
         String orderSn = null;
         try {
             //1、判断是否登录
-            orderSn = seckillService.kill(killId,key,num);
-            model.addAttribute("orderSn",orderSn);
+            orderSn = seckillService.kill(killId, key, num);
+            model.addAttribute("orderSn", orderSn);
         } catch (Exception e) {
             e.printStackTrace();
         }
