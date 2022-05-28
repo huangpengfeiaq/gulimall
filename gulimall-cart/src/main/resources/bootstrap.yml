@@ -4,8 +4,20 @@ spring:
 
   cloud:
     nacos:
+      server-addr: localhost:8848
       config:
         server-addr: localhost:8848
         namespace: a758f750-9a5e-4159-a669-94f2f6f3ba22
+    sentinel:
+      transport:
+        #配置sentinel dashboard地址
+        dashboard: localhost:8080
+
+#暴露所有端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
 
 

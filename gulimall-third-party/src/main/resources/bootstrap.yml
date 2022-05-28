@@ -27,3 +27,14 @@ spring:
           - data-id: oss.yml
             group: DEFAULT_GROUP
             refresh: true
+    sentinel:
+      transport:
+        #配置sentinel dashboard地址
+        dashboard: localhost:8080
+
+#暴露所有端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

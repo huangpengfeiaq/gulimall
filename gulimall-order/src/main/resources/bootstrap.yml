@@ -9,5 +9,16 @@ spring:
 #      config:
 #        server-addr: localhost:8848
 #        namespace: 5d258111-0e04-45d0-b55d-b76642b41e84
+    sentinel:
+      transport:
+        #配置sentinel dashboard地址
+        dashboard: localhost:8080
+
+#暴露所有端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
 
 
