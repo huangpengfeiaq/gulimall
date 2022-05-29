@@ -20,7 +20,7 @@ spring:
   session:
     store-type: redis
 
-##开启feign对sentinel的支持
-#feign:
-#  sentinel:
-#    enabled: true
+#开启feign对sentinel的支持
+feign:
+  sentinel:
+    enabled: true
