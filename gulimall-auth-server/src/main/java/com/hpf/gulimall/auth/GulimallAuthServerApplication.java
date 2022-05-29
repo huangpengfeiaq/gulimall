@@ -1,7 +1,7 @@
 package com.hpf.gulimall.auth;
 
-import com.hpf.feign.client.MemberFeignClient;
-import com.hpf.feign.client.ThirdPartFeignClient;
+import com.hpf.gulimall.feign.client.MemberFeignClient;
+import com.hpf.gulimall.feign.client.ThirdPartFeignClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;

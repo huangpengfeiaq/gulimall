@@ -1,6 +1,6 @@
 package com.hpf.gulimall.cart;
 
-import com.hpf.feign.client.ProductFeignClient;
+import com.hpf.gulimall.feign.client.ProductFeignClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;

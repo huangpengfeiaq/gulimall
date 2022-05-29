@@ -2,7 +2,7 @@ package com.hpf.gulimall.ware.service.impl;
 
 import com.alibaba.fastjson.TypeReference;
 import com.hpf.common.utils.R;
-import com.hpf.feign.client.MemberFeignClient;
+import com.hpf.gulimall.feign.client.MemberFeignClient;
 import com.hpf.gulimall.ware.vo.FareVo;
 import com.hpf.gulimall.ware.vo.MemberAddressVo;
 import org.springframework.beans.factory.annotation.Autowired;

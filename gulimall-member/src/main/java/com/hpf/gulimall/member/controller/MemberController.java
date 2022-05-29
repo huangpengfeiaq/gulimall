@@ -16,7 +16,7 @@ import com.hpf.gulimall.member.entity.MemberEntity;
 import com.hpf.gulimall.member.service.MemberService;
 import com.hpf.common.utils.PageUtils;
 import com.hpf.common.utils.R;
-import com.hpf.feign.client.CouponFeignClient;
+import com.hpf.gulimall.feign.client.CouponFeignClient;
 
 
 /**

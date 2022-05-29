@@ -1,6 +1,6 @@
 package com.hpf.gulimall.search;
 
-import com.hpf.feign.client.ProductFeignClient;
+import com.hpf.gulimall.feign.client.ProductFeignClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;

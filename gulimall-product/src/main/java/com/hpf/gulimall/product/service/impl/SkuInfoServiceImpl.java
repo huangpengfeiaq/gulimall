@@ -2,6 +2,7 @@ package com.hpf.gulimall.product.service.impl;
 
 import com.alibaba.fastjson.TypeReference;
 import com.hpf.common.utils.R;
+import com.hpf.gulimall.feign.client.SeckillFeignClient;
 import com.hpf.gulimall.product.entity.SkuImagesEntity;
 import com.hpf.gulimall.product.entity.SpuInfoDescEntity;
 import com.hpf.gulimall.product.service.*;
@@ -45,8 +46,8 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
     @Resource
     private SkuSaleAttrValueService skuSaleAttrValueService;
 
-//    @Autowired
-//    private SeckillFeignClient seckillFeignService;
+    @Autowired
+    private SeckillFeignClient seckillFeignService;
 
     @Resource
     private ThreadPoolExecutor executor;
@@ -148,27 +149,27 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoDao, SkuInfoEntity> i
             skuItemVo.setImages(imagesEntities);
         }, executor);
 
-//        CompletableFuture<Void> seckillFuture = CompletableFuture.runAsync(() -> {
-//            //3、远程调用查询当前sku是否参与秒杀优惠活动
-//            R skuSeckilInfo = seckillFeignService.getSkuSeckilInfo(skuId);
-//            if (skuSeckilInfo.getCode() == 0) {
-//                //查询成功
-//                SeckillSkuVo seckilInfoData = skuSeckilInfo.getKey("data", new TypeReference<SeckillSkuVo>() {
-//                });
-//                skuItemVo.setSeckillSkuVo(seckilInfoData);
-//
-//                if (seckilInfoData != null) {
-//                    long currentTime = System.currentTimeMillis();
-//                    if (currentTime > seckilInfoData.getEndTime()) {
-//                        skuItemVo.setSeckillSkuVo(null);
-//                    }
-//                }
-//            }
-//        }, executor);
+        CompletableFuture<Void> seckillFuture = CompletableFuture.runAsync(() -> {
+            //3、远程调用查询当前sku是否参与秒杀优惠活动
+            R skuSeckilInfo = seckillFeignService.getSkuSeckilInfo(skuId);
+            if (skuSeckilInfo.getCode() == 0) {
+                //查询成功
+                SeckillSkuVo seckilInfoData = skuSeckilInfo.getKey("data", new TypeReference<SeckillSkuVo>() {
+                });
+                skuItemVo.setSeckillSkuVo(seckilInfoData);
+
+                if (seckilInfoData != null) {
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime > seckilInfoData.getEndTime()) {
+                        skuItemVo.setSeckillSkuVo(null);
+                    }
+                }
+            }
+        }, executor);
 
 
         //等到所有任务都完成
-        CompletableFuture.allOf(saleAttrFuture,descFuture,baseAttrFuture,imageFuture).get();
+        CompletableFuture.allOf(saleAttrFuture,descFuture,baseAttrFuture,imageFuture,seckillFuture).get();
 
         return skuItemVo;
     }

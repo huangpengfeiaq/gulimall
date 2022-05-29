@@ -1,4 +1,4 @@
-package com.hpf.feign.client;
+package com.hpf.gulimall.feign.client;
 
 import com.hpf.common.vo.OrderItemVo;
 import org.springframework.cloud.openfeign.FeignClient;

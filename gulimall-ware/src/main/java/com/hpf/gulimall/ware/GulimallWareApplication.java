@@ -1,8 +1,8 @@
 package com.hpf.gulimall.ware;
 
-import com.hpf.feign.client.MemberFeignClient;
-import com.hpf.feign.client.OrderFeignClient;
-import com.hpf.feign.client.ProductFeignClient;
+import com.hpf.gulimall.feign.client.MemberFeignClient;
+import com.hpf.gulimall.feign.client.OrderFeignClient;
+import com.hpf.gulimall.feign.client.ProductFeignClient;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

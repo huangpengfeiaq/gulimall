@@ -1,4 +1,4 @@
-package com.hpf.feign.client;
+package com.hpf.gulimall.feign.client;
 
 import com.hpf.common.to.es.SkuEsModel;
 import com.hpf.common.utils.R;

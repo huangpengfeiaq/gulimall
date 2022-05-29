@@ -1,7 +1,7 @@
 package com.hpf.gulimall.member.web;
 
 import com.alibaba.fastjson.JSON;
-import com.hpf.feign.client.OrderFeignClient;
+import com.hpf.gulimall.feign.client.OrderFeignClient;
 import com.hpf.common.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -1,7 +1,7 @@
 package com.hpf.gulimall.seckill;
 
-import com.hpf.feign.client.CouponFeignClient;
-import com.hpf.feign.client.ProductFeignClient;
+import com.hpf.gulimall.feign.client.CouponFeignClient;
+import com.hpf.gulimall.feign.client.ProductFeignClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -38,9 +38,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableDiscoveryClient
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class GulimallSeckillApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(GulimallSeckillApplication.class, args);
     }
-
 }

@@ -1,9 +1,9 @@
 package com.hpf.gulimall.order;
 
-import com.hpf.feign.client.CartFeignClient;
-import com.hpf.feign.client.MemberFeignClient;
-import com.hpf.feign.client.ProductFeignClient;
-import com.hpf.feign.client.WareFeignClient;
+import com.hpf.gulimall.feign.client.CartFeignClient;
+import com.hpf.gulimall.feign.client.MemberFeignClient;
+import com.hpf.gulimall.feign.client.ProductFeignClient;
+import com.hpf.gulimall.feign.client.WareFeignClient;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

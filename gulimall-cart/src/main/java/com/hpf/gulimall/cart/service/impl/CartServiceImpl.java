@@ -3,7 +3,7 @@ package com.hpf.gulimall.cart.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.hpf.common.utils.R;
-import com.hpf.feign.client.ProductFeignClient;
+import com.hpf.gulimall.feign.client.ProductFeignClient;
 import com.hpf.gulimall.cart.exception.CartExceptionHandler;
 import com.hpf.gulimall.cart.interceptor.CartInterceptor;
 import com.hpf.gulimall.cart.service.CartService;
