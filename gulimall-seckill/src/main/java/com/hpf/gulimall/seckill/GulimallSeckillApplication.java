@@ -32,6 +32,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  * } catch(Exception e) {}
  * <p>
  * 2）、基于注解
+ * >@SentinelResource(value = "getCurrentSeckillSkusResource", blockHandler = "blockHandler")
  */
 @EnableRedisHttpSession     //开启springsession
 @EnableFeignClients(clients = {CouponFeignClient.class, ProductFeignClient.class})
