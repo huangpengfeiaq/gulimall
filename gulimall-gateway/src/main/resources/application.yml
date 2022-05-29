@@ -1,5 +1,9 @@
 spring:
   cloud:
+    sentinel:
+      transport:
+        #配置sentinel dashboard地址
+        dashboard: localhost:8080
     gateway:
       routes: # 网关路由配置
         # 仓储服务
@@ -98,3 +102,10 @@ spring:
             allowedHeaders: "*" # 允许在请求中携带的头信息
             allowCredentials: true # 是否允许携带cookie
             maxAge: 360000 # 这次跨域检测的有效期
+
+#暴露所有端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
