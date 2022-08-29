@@ -27,6 +27,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -52,6 +53,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
+import javax.annotation.Resource;
+
 import static com.hpf.common.constant.CartConstant.CART_PREFIX;
 import static com.hpf.gulimall.order.constant.OrderConstant.USER_ORDER_TOKEN_PREFIX;
 
@@ -76,9 +79,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
     @Autowired
     private PaymentInfoService paymentInfoService;
     //    @Autowired
-//    private BestPayService bestPayService;
-    @Autowired
-    private ThreadPoolExecutor threadPoolExecutor;
+    //    private BestPayService bestPayService;
+    @Resource(name="cacheUpdateTaskExecutor")
+    private ThreadPoolTaskExecutor threadPoolExecutor;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
