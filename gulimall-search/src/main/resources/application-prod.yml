@@ -1,0 +1,41 @@
+server:
+  port: 12000
+spring:
+  application:
+    name: gulimall-search # 服务名称
+  profiles:
+    active: dev #开发环境，这里是dev
+  cloud:
+    nacos:
+      server-addr: nacos-service.gulimall:8848
+      config:
+        server-addr: nacos-service.gulimall:8848
+        file-extension: yaml # 文件后缀名
+        namespace: search
+    sentinel:
+      transport:
+        #配置sentinel dashboard地址
+        dashboard: sentinel-service.gulimall:8333
+  #服务追踪
+  zipkin:
+    base-url: http://zipkin-service.gulimall:9411/
+    discovery-client-enabled: false # 关闭服务发现，否则 Spring Cloud 会把 zipkin 的 url 当做服务名称
+    sender:
+      type: web # 设置使用 http 的方式传输数据
+  #配置采样器
+  sleuth:
+    sampler:
+      probability: 1 # 设置抽样采集率为 100%，默认为 0.1，即 10%
+  thymeleaf:
+    cache: false
+  redis:
+    host: redis.gulimall
+  session:
+    store-type: redis
+
+#暴露所有端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

@@ -1,0 +1,52 @@
+server:
+  port: 40000
+
+spring:
+  application:
+    name: gulimall-cart
+  cloud:
+    nacos:
+      server-addr: nacos-service.gulimall:8848
+      discovery:
+        server-addr: nacos-service.gulimall:8848
+      config:
+        server-addr: nacos-service.gulimall:8848
+        namespace: a758f750-9a5e-4159-a669-94f2f6f3ba22
+    sentinel:
+      transport:
+        #配置sentinel dashboard地址
+        dashboard: sentinel-service.gulimall:8333
+  #服务追踪
+  zipkin:
+    base-url: http://zipkin-service.gulimall:9411/
+    discovery-client-enabled: false # 关闭服务发现，否则 Spring Cloud 会把 zipkin 的 url 当做服务名称
+    sender:
+      type: web # 设置使用 http 的方式传输数据
+  #配置采样器
+  sleuth:
+    sampler:
+      probability: 1 # 设置抽样采集率为 100%，默认为 0.1，即 10%
+  redis:
+    port: 6379
+    host: redis.gulimall
+  session:
+    store-type: redis
+
+#开启feign对sentinel的支持
+feign:
+  sentinel:
+    enabled: true
+
+#暴露所有端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+#配置线程池
+gulimall:
+  thread:
+    coreSize: 20
+    maxSize: 200
+    keepAliveTime: 10

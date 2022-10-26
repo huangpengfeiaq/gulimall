@@ -1,0 +1,64 @@
+server:
+  port: 25000
+
+spring:
+  application:
+    name: gulimall-seckill
+  cloud:
+    nacos:
+      server-addr: nacos-service.gulimall:8848
+      discovery:
+        server-addr: nacos-service.gulimall:8848
+      config:
+        server-addr: nacos-service.gulimall:8848
+    sentinel:
+      transport:
+        #配置sentinel dashboard地址
+        dashboard: sentinel-service.gulimall:8333
+        #默认8719端口，假如被占用会自动从8719开始依次+1扫描，直至找到未被占用的端口
+        port: 8719
+  #服务追踪
+  zipkin:
+    base-url: http://zipkin-service.gulimall:9411/
+    discovery-client-enabled: false # 关闭服务发现，否则 Spring Cloud 会把 zipkin 的 url 当做服务名称
+    sender:
+      type: web # 设置使用 http 的方式传输数据
+  #配置采样器
+  sleuth:
+    sampler:
+      probability: 1 # 设置抽样采集率为 100%，默认为 0.1，即 10%
+  redis:
+    host: redis.gulimall
+    port: 6379
+  thymeleaf:
+    cache: false
+  rabbitmq:
+    host: rabbitmq-management.gulimall
+    port: 5672
+    virtual-host: /
+  #配置异步任务线程池
+  task:
+    execution:
+      pool:
+        core-size: 5
+        max-size: 50
+  session:
+    store-type: redis
+
+#开启feign对sentinel的支持
+feign:
+  sentinel:
+    enabled: true
+
+logging:
+  level:
+    #开启debug日志
+    org.springframework.cloud.openfeign: debug
+    org.springframework.cloud.sleuth: debug
+
+#暴露所有端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

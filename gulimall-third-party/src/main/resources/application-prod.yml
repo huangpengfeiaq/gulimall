@@ -1,0 +1,50 @@
+server:
+  port: 30000
+spring:
+  #服务追踪
+  zipkin:
+    base-url: http://zipkin-service.gulimall:9411/
+    discovery-client-enabled: false # 关闭服务发现，否则 Spring Cloud 会把 zipkin 的 url 当做服务名称
+    sender:
+      type: web # 设置使用 http 的方式传输数据
+  #配置采样器
+  sleuth:
+    sampler:
+      probability: 1 # 设置抽样采集率为 100%，默认为 0.1，即 10%
+  application:
+    name: gulimall-third-party # 服务名称
+  profiles:
+    active: dev #开发环境，这里是dev
+  cloud:
+    alicloud:
+      access-key: LTAI5t5s5szrRwLSGULKaiv2
+      secret-key: 69xegJUVswuoj3NCxJfEQWuFyjCeDe
+      oss:
+        endpoint: oss-cn-beijing.aliyuncs.com
+        bucket: gulimall-hpf
+      sms:
+        host: https://dfsns.market.alicloudapi.com
+        path: /data/send_sms
+        templateId: TPL_0000
+        appcode: 2b2958b7741348a095bbc7a9278ea012
+    nacos:
+      server-addr: localhost:8848 # Nacos地址
+      config:
+        server-addr: localhost:8848
+        file-extension: yaml # 文件后缀名
+        namespace: third-party
+        extension-configs:
+          - data-id: oss.yml
+            group: DEFAULT_GROUP
+            refresh: true
+    sentinel:
+      transport:
+        #配置sentinel dashboard地址
+        dashboard: sentinel-service.gulimall:8333
+
+#暴露所有端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: gulimall-coupon # 服务名称
+  profiles:
+    active: dev #开发环境，这里是dev
+  cloud:
+    nacos:
+      server-addr: nacos-service.gulimall:8848
+      #      discovery:
+      #        cluster-name: HZ # 集群名称，HZ指杭州
+      #        namespace: e3d134fc-c8e2-4998-a8c1-604368775218 # 命名空间，填ID
+      #        ephemeral: false # 是否是临时实例
+      config:
+        file-extension: yaml # 文件后缀名
+        namespace: coupon
+        group: 1111
+    sentinel:
+      transport:
+        #配置sentinel dashboard地址
+        dashboard: sentinel-service.gulimall:8333
+  #服务追踪
+  zipkin:
+    base-url: http://zipkin-service.gulimall:9411/
+    discovery-client-enabled: false # 关闭服务发现，否则 Spring Cloud 会把 zipkin 的 url 当做服务名称
+    sender:
+      type: web # 设置使用 http 的方式传输数据
+  #配置采样器
+  sleuth:
+    sampler:
+      probability: 1 # 设置抽样采集率为 100%，默认为 0.1，即 10%
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql-master.gulimall:3306/gulimall_sms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+
+server:
+  port: 7000
+
+coupon:
+  username: zhangsan2
+
+#暴露所有端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
