@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: gulimall-coupon
+  namespace: gulimall
+  labels:
+    app: gulimall-coupon
+    version: v1
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 20005
+  selector:
+    app: gulimall-coupon
+  type: NodePort
+  sessionAffinity: None

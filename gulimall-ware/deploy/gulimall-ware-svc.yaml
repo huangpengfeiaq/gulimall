@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: gulimall-ware
+  namespace: gulimall
+  labels:
+    app: gulimall-ware
+    version: v1
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 20021
+  selector:
+    app: gulimall-ware
+  type: NodePort
+  sessionAffinity: None

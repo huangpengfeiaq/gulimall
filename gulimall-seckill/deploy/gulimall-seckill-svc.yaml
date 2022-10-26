@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: gulimall-seckill
+  namespace: gulimall
+  labels:
+    app: gulimall-seckill
+    version: v1
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 20017
+  selector:
+    app: gulimall-seckill
+  type: NodePort
+  sessionAffinity: None

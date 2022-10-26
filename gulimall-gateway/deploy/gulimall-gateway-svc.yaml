@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: gulimall-gateway
+  namespace: gulimall
+  labels:
+    app: gulimall-gateway
+    version: v1
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 20007
+  selector:
+    app: gulimall-gateway
+  type: NodePort
+  sessionAffinity: None

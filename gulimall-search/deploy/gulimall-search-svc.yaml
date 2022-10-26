@@ -1,0 +1,19 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: gulimall-search
+  namespace: gulimall
+  labels:
+    app: gulimall-search
+    version: v1
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 20015
+  selector:
+    app: gulimall-search
+  type: NodePort
+  sessionAffinity: None
