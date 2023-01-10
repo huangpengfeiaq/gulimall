@@ -17,8 +17,8 @@ spring:
     active: dev #开发环境，这里是dev
   cloud:
     alicloud:
-      access-key: LTAI5t5s5szrRwLSGULKaiv2
-      secret-key: 69xegJUVswuoj3NCxJfEQWuFyjCeDe
+      access-key:
+      secret-key:
       oss:
         endpoint: oss-cn-beijing.aliyuncs.com
         bucket: gulimall-hpf
@@ -26,7 +26,7 @@ spring:
         host: https://dfsns.market.alicloudapi.com
         path: /data/send_sms
         templateId: TPL_0000
-        appcode: 2b2958b7741348a095bbc7a9278ea012
+        appcode:
     nacos:
       server-addr: localhost:8848 # Nacos地址
       config:
